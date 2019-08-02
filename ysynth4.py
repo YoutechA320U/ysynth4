@@ -63,14 +63,20 @@ playflag = [0]
 sf2used = [0]
 pbcounter =[0]*16
 
-input_A = 6
-input_B = 24
-input_C = 16
+input_OK = 16
+input_MODE = 17
+input_LEFT = 6
+input_RIGHT = 24
+input_UP = 23
+input_DOWN = 5
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(input_A, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(input_B, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(input_C, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(input_OK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(input_MODE, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(input_RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(input_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(input_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(input_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 subprocess.call('sudo killall ttymidi', shell=True)
 subprocess.call('sudo killall timidity', shell=True)
@@ -87,37 +93,50 @@ def allnoteoff():
 subprocess.call('amixer cset numid=1 95% > /dev/null', shell=True)
 
 
-font = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
-fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
 fonts = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 12, encoding='unic')
+fontm = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
+fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
 
 x = 3
 y = 0
-MESSAGE="AAAA" #4文字分
+m_size="A" #1文字分
+cur_size="▶"
 
-xa, size_y  = draw.textsize(MESSAGE, fontl)
+m_size_s_x, m_size_s_y  = draw.textsize(m_size, fonts)
+m_size_m_x, m_size_m_y  = draw.textsize(m_size, fontm)
+m_size_l_x, m_size_l_y  = draw.textsize(m_size, fontl)
+cur_size_x, cur_size_y  = draw.textsize(m_size, fonts)
+
+mode0_coordi=0
+mode0_coordi_xl=[3,3,3,3,3,3,3,3,m_size_m_x*10,m_size_m_x*10]
+mode0_coordi_yl=[m_size_l_y/4,m_size_l_y+m_size_m_y+1,\
+   m_size_l_y+m_size_m_y*2+1,m_size_l_y+m_size_m_y*3+1,\
+      m_size_l_y+m_size_m_y*4+1,m_size_l_y+m_size_m_y*5+1,\
+         m_size_l_y+m_size_m_y*6+1,m_size_l_y+m_size_m_y*7+1,\
+            m_size_l_y+m_size_m_y+1,m_size_l_y+m_size_m_y*2+1]
 ##初期設定ここまで##
 
-draw.text((x, 0),"CH:",  font=fontl, fill=(55, 255, 255))
-draw.text((x, 21),"PC :", font=font, fill=(55, 255, 255))
-draw.text((x, 35),"VOL:",  font=font, fill=(55, 255, 255))
-draw.text((x, 49),"EXP:",  font=font, fill=(55, 255, 255))
-draw.text((x, 63),"PAN:",  font=font, fill=(55, 255, 255))
-draw.text((x, 77),"MOD:",  font=font, fill=(55, 255, 255))
-draw.text((x, 91),"REV:", font=font, fill=(55, 255, 255))
-draw.text((x, 105),"CHO:",  font=font, fill=(55, 255, 255))
-draw.text((xa-8, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
-draw.text((xa-10, 21),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=font, fill=(255, 255, 55))
-draw.text((xa-10, 35),str("{0:03d}".format(midiCC7[midiCH])),  font=font, fill=(255, 255, 55))
-draw.text((xa-10, 49),str("{0:03d}".format(midiCC11[midiCH])),  font=font, fill=(255, 255, 55))
-draw.text((xa-10, 63),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=font, fill=(255, 255, 55))
-draw.text((xa-10, 77),str("{0:03d}".format(midiCC1[midiCH])),  font=font, fill=(255, 255, 55))
-draw.text((xa-10, 91),str("{0:03d}".format(midiCC91[midiCH])), font=font, fill=(255, 255, 55))
-draw.text((xa-10, 105),str("{0:03d}".format(midiCC93[midiCH])),  font=font, fill=(255, 255, 55))
-draw.text((xa*2-10, 21),"DLY   :", font=font, fill=(55, 255, 255))
-draw.text((xa*3, 21),str("{0:03d}".format(midiCC94[midiCH])), font=font, fill=(255, 255, 55))
-draw.text((xa*2-10, 35),"P.BEND:", font=font, fill=(55, 255, 255))
-draw.text((xa*3, 35),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=font, fill=(255, 255, 55))
+draw.text((x, m_size_l_y/4),cur_size,  font=fonts, fill=(255, 255, 255))
+draw.text((cur_size_x+x, 0),"CH:",  font=fontl, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y+1),"PC :", font=fontm, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y*2+1),"VOL:",  font=fontm, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y*3+1),"EXP:",  font=fontm, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y*4+1),"PAN:",  font=fontm, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y*5+1),"MOD:",  font=fontm, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y*6+1),"REV:", font=fontm, fill=(55, 255, 255))
+draw.text((cur_size_x+x, m_size_l_y+m_size_m_y*7+1),"CHO:",  font=fontm, fill=(55, 255, 255))
+draw.text((m_size_l_x*4, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
+draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
+draw.text((cur_size_x+m_size_m_x*10, m_size_l_y+m_size_m_y+1),"DLY   :", font=fontm, fill=(55, 255, 255))
+draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
+draw.text((cur_size_x+m_size_m_x*10, m_size_l_y+m_size_m_y*2+1),"P.BEND:", font=fontm, fill=(55, 255, 255))
+draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
 disp.display(img)
 
 timer = time.time()
@@ -150,17 +169,17 @@ while True:
            pb1 = [0]*16
            pb2 = [0x40]*16
            if mode == 0:
-              draw.rectangle((xa-10, 21, 65, 128), (0,0,0))
-              draw.text((xa-10, 21),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=font, fill=(255, 255, 55))
-              draw.text((xa-10, 35),str("{0:03d}".format(midiCC7[midiCH])),  font=font, fill=(255, 255, 55))
-              draw.text((xa-10, 49),str("{0:03d}".format(midiCC11[midiCH])),  font=font, fill=(255, 255, 55))
-              draw.text((xa-10, 63),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=font, fill=(255, 255, 55))
-              draw.text((xa-10, 77),str("{0:03d}".format(midiCC1[midiCH])),  font=font, fill=(255, 255, 55))
-              draw.text((xa-10, 91),str("{0:03d}".format(midiCC91[midiCH])), font=font, fill=(255, 255, 55))
-              draw.text((xa-10, 105),str("{0:03d}".format(midiCC93[midiCH])),  font=font, fill=(255, 255, 55))
-              draw.rectangle((xa*3, 21, 160, 128), (0,0,0))
-              draw.text((xa*3, 21),str("{0:03d}".format(midiCC94[midiCH])), font=font, fill=(255, 255, 55))
-              draw.text((xa*3, 35),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=font, fill=(255, 255, 55))
+              draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y+1, 65, 128), (0,0,0))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
+              draw.rectangle((m_size_m_x*18, m_size_l_y+m_size_m_y+1, 160, 128), (0,0,0))
+              draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
+              draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
               disp.display(img)
        except :
         continue
@@ -169,114 +188,145 @@ while True:
            if midiPROG[forlch] != message[1]:
               midiPROG[forlch] = message[1]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 21, 65, 34), (0,0,0))
-                 draw.text((xa-10, 21),str("{0:03d}".format(midiPROG[forlch] + 1)), font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y+1, 65, m_size_l_y+m_size_m_y*2), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiPROG[forlch] + 1)), font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==7:
            if midiCC7[forlch] != message[2]:
               midiCC7[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 35, 65, 48), (0,0,0))
-                 draw.text((xa-10, 35),str("{0:03d}".format(midiCC7[forlch])),  font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y*2+1, 65, m_size_l_y+m_size_m_y*3), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*2+1),str("{0:03d}".format(midiCC7[forlch])),  font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==11:
            if midiCC11[forlch] != message[2]:
               midiCC11[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 49, 65, 62), (0,0,0))
-                 draw.text((xa-10, 49),str("{0:03d}".format(midiCC11[forlch])),  font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y*3+1, 65, m_size_l_y+m_size_m_y*4), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*3+1),str("{0:03d}".format(midiCC11[forlch])),  font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==10:
            if midiCC10[forlch] != message[2]:
               midiCC10[forlch] = message[2] 
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 63, 65, 76), (0,0,0))
-                 draw.text((xa-10, 63),str("{0:03d}".format(midiCC10[forlch]-64)),  font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y*4+1, 65, m_size_l_y+m_size_m_y*5), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*4+1),str("{0:03d}".format(midiCC10[forlch]-64)),  font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==1:
            if midiCC1[forlch] != message[2]:
               midiCC1[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 77, 65, 90), (0,0,0))
-                 draw.text((xa-10, 77),str("{0:03d}".format(midiCC1[forlch])),  font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y*5+1, 65, m_size_l_y+m_size_m_y*6), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*5+1),str("{0:03d}".format(midiCC1[forlch])),  font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==91:
            if midiCC91[forlch] != message[2]:
               midiCC91[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 91, 65, 104), (0,0,0))
-                 draw.text((xa-10, 91),str("{0:03d}".format(midiCC91[forlch])), font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y*6+1, 65, m_size_l_y+m_size_m_y*7), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*6+1),str("{0:03d}".format(midiCC91[forlch])), font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==93:
            if midiCC93[forlch] != message[2]:
               midiCC93[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa-10, 105, 65, 128), (0,0,0))
-                 draw.text((xa-10, 105),str("{0:03d}".format(midiCC93[forlch])),  font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y*7+1, 65, 128), (0,0,0))
+                 draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*7+1),str("{0:03d}".format(midiCC93[forlch])),  font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 176+forlch and message[1] ==94:
            if midiCC94[forlch] != message[2]:
               midiCC94[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa*3, 21, 160, 34), (0,0,0))
-                 draw.text((xa*3, 21),str("{0:03d}".format(midiCC94[forlch])), font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*18, m_size_l_y+m_size_m_y+1, 160,  m_size_l_y+m_size_m_y*2), (0,0,0))
+                 draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiCC94[forlch])), font=fontm, fill=(255, 255, 55))
                  disp.display(img)
         if message[0] == 0xe0+forlch :
            if pb1[forlch] != message[1] or pb2[forlch] != message[2]:
               pb1[forlch] = message[1]
               pb2[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
-                 draw.rectangle((xa*3, 35, 160, 48), (0,0,0))
-                 draw.text((xa*3, 35),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[forlch]-8192)), font=font, fill=(255, 255, 55))
+                 draw.rectangle((m_size_m_x*18, m_size_l_y+m_size_m_y*2+1, 160, m_size_l_y+m_size_m_y*3), (0,0,0))
+                 draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[forlch]-8192)), font=fontm, fill=(255, 255, 55))
                  disp.display(img)
-    
-    if GPIO.input(input_A) == 0:
-       time.sleep(0.1)  
-       midiCH -=1 
-       if midiCH<0:
-          midiCH=15 
-       #print(midiCH)
-       draw.rectangle((xa-8, 0, 65, 20), (0,0,0))
-       draw.text((xa-8, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
-       draw.rectangle((xa-10, 21, 65, 128), (0,0,0))
-       draw.text((xa-10, 21),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 35),str("{0:03d}".format(midiCC7[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 49),str("{0:03d}".format(midiCC11[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 63),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 77),str("{0:03d}".format(midiCC1[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 91),str("{0:03d}".format(midiCC91[midiCH])), font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 105),str("{0:03d}".format(midiCC93[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.rectangle((xa*3, 21, 160, 128), (0,0,0))
-       draw.text((xa*3, 21),str("{0:03d}".format(midiCC94[midiCH])), font=font, fill=(255, 255, 55))
-       draw.text((xa*3, 35),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=font, fill=(255, 255, 55))
-       disp.display(img)
-       while (GPIO.input(input_A)) == 0: 
-             continue  
-    if GPIO.input(input_B) == 0:  
-       time.sleep(0.1)  
-       midiCH +=1  
-       if midiCH>15:
-          midiCH=0
-       #print(midiCH)
-       draw.rectangle((xa-8, 0, 65, 20), (0,0,0))
-       draw.text((xa-8, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
-       draw.rectangle((xa-10, 21, 65, 128), (0,0,0))
-       draw.text((xa-10, 21),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 35),str("{0:03d}".format(midiCC7[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 49),str("{0:03d}".format(midiCC11[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 63),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 77),str("{0:03d}".format(midiCC1[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 91),str("{0:03d}".format(midiCC91[midiCH])), font=font, fill=(255, 255, 55))
-       draw.text((xa-10, 105),str("{0:03d}".format(midiCC93[midiCH])),  font=font, fill=(255, 255, 55))
-       draw.rectangle((xa*3, 21, 160, 128), (0,0,0))
-       draw.text((xa*3, 21),str("{0:03d}".format(midiCC94[midiCH])), font=font, fill=(255, 255, 55))
-       draw.text((xa*3, 35),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=font, fill=(255, 255, 55))
-       disp.display(img)
-       while (GPIO.input(input_B)) == 0: 
+
+    if GPIO.input(input_LEFT) == 0: 
+       if mode==0:
+          if mode0_coordi ==0:
+             midiCH -=1
+             if midiCH<0:
+                midiCH=15 
+             draw.rectangle((m_size_l_x*4,0, m_size_l_x*6,m_size_l_y), (0,0,0))
+             draw.text((m_size_l_x*4, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
+             draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y+1, 65, 128), (0,0,0))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.rectangle((m_size_m_x*18, m_size_l_y+m_size_m_y+1, 160, 128), (0,0,0))
+             draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))       
+             disp.display(img)
+       while (GPIO.input(input_LEFT) == 0): 
              continue
-    if GPIO.input(input_C) == 0: 
-       time.sleep(0.1)  
-       subprocess.call('sudo shutdown -h now', shell=True)
+    if GPIO.input(input_RIGHT) == 0: 
+       if mode==0:
+          if mode0_coordi ==0:
+             midiCH +=1
+             if midiCH>15:
+                midiCH=0 
+             draw.rectangle((m_size_l_x*4,0, m_size_l_x*6,m_size_l_y), (0,0,0))
+             draw.text((m_size_l_x*4, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
+             draw.rectangle((m_size_m_x*5, m_size_l_y+m_size_m_y+1, 65, 128), (0,0,0))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*5, m_size_l_y+m_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
+             draw.rectangle((m_size_m_x*18, m_size_l_y+m_size_m_y+1, 160, 128), (0,0,0))
+             draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
+             draw.text((m_size_m_x*18, m_size_l_y+m_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
+             disp.display(img)
+       while (GPIO.input(input_RIGHT) == 0): 
+             continue
+    if GPIO.input(input_UP) == 0: 
+       if mode==0:
+          draw.rectangle((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi],mode0_coordi_xl[mode0_coordi]+cur_size_x, mode0_coordi_yl[mode0_coordi]+cur_size_y), (0,0,0))
+          mode0_coordi -=1
+          if mode0_coordi <0:
+             mode0_coordi=9
+          draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
+          disp.display(img)   
+          while (GPIO.input(input_UP) == 0): 
+                continue    
+    if GPIO.input(input_DOWN) == 0: 
+       if mode==0:
+          draw.rectangle((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi],mode0_coordi_xl[mode0_coordi]+cur_size_x, mode0_coordi_yl[mode0_coordi]+cur_size_y), (0,0,0))
+          mode0_coordi +=1
+          if mode0_coordi >9:
+             mode0_coordi=0
+          draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255)) 
+          disp.display(img)
+          while (GPIO.input(input_DOWN) == 0): 
+                continue
+    if GPIO.input(input_MODE) == 0:  
+       mode +=1
+       if mode>0:
+          mode=0
+       while (GPIO.input(input_MODE)) == 0: 
+             continue 
+    if GPIO.input(input_OK) == 0: 
+       if mode==0 and mode0_coordi !=0:
+          draw.rectangle((mode0_coordi_xl[mode0_coordi]+m_size_m_x, mode0_coordi_yl[mode0_coordi],mode0_coordi_xl[mode0_coordi]+cur_size_x+m_size_m_x*7, mode0_coordi_yl[mode0_coordi]+cur_size_y), (200,200,200))
+          disp.display(img)
+          while (GPIO.input(input_OK)) == 0: 
+                continue
+       if mode==0 and mode0_coordi ==0: 
+          subprocess.Popen("sudo shutdown -h now" ,shell=True)           
     if msg is  None:         
        time.sleep(0.00001)  
 ##MIDI入力をディスプレイに反映する処理ここまで
