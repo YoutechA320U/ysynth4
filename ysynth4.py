@@ -593,6 +593,8 @@ while True:
           draw.text((3,60),"最新版をダウンロードします...",  font=fonts, fill=(0, 255, 0))
           disp.display(img)
           time.sleep(2)
+          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+          disp.display(img)
           subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
        
        if mode==2 and mode2_coordi ==5:
