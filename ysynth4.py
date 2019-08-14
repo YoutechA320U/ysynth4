@@ -92,8 +92,8 @@ def allnoteoff():
         midiout.send_message([a, 0x78, 0x00])
         a += 1
 subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
-
-
+wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
+audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', ''))
 fonts = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 12, encoding='unic')
 fontm = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
 fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
@@ -126,6 +126,7 @@ mode2_coordi_yl=[t_size_l_y+t_size_m_y+1,t_size_l_y+t_size_m_y*2+1,\
    t_size_l_y+t_size_m_y*3+1,t_size_l_y+t_size_m_y*4+1,\
       t_size_l_y+t_size_m_y*5+1,t_size_l_y+t_size_m_y*6+1,\
          t_size_l_y+t_size_m_y*7+1,]
+
 
 def mode0_default_disp():
    draw.rectangle((0, 0, 160, 128), (0,0,0))
@@ -176,8 +177,8 @@ def mode2_default_disp():
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"再起動", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
    draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),"SGM-V2.01.sf2 ♪", font=fontm, fill=(255, 255, 55))
-   draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y*2+1),"*************",  font=fontm, fill=(255, 255, 55))
-   draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*3+1),"IQaudIODAC",  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y*2+1),wifi_ssid,  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*3+1),audio_card,  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
    disp.display(img)
 ##初期設定ここまで##
@@ -588,14 +589,26 @@ while True:
     if GPIO.input(input_OK) == 0: 
        if mode==2 and mode2_coordi ==4:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          subprocess.call("sudo wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/" ,shell=True)
-          draw.text((3,60),"最新版をダウンロードします...",  font=fonts, fill=(0, 255, 0))
-          subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
+          draw.text((3,60),"    ダウンロード中...",  font=fonts, fill=(0, 255, 0))
           disp.display(img)
-          time.sleep(2)
-          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          disp.display(img)
-          subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+          subprocess.call("wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/" ,shell=True)
+          latest_dl =int(subprocess.check_output("test -f ysynth4/ysynth4.py.1;echo $?" ,shell=True).decode('utf-8').strip())
+          print(latest_dl)
+          if latest_dl == 1:
+             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+             draw.text((3,60),"    ダウンロード失敗",  font=fonts, fill=(0, 255, 0))
+             disp.display(img)
+             time.sleep(2)
+             mode2_default_disp()
+          if latest_dl ==0:
+             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+             draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
+             subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
+             disp.display(img)
+             time.sleep(2)
+             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+             disp.display(img)
+             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
        
        if mode==2 and mode2_coordi ==5:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
