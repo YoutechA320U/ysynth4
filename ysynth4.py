@@ -131,7 +131,7 @@ def mode0_default_disp():
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
    draw.text((cur_size_x+x, 0),"CH:",  font=fontl, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"PC :", font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"INS:", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"VOL:",  font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"EXP:",  font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"PAN:",  font=fontm, fill=(55, 255, 255))
