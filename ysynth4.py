@@ -590,7 +590,7 @@ while True:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
           subprocess.call("sudo rm -f /home/pi/ysynth4/ysynth4.py" , shell=True)
           subprocess.call("sudo wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/" ,shell=True)
-          draw.text((3,60),"最新版をダウンロードします...",  font=fontl, fill=(0, 255, 0))
+          draw.text((3,60),"最新版をダウンロードします...",  font=fontm, fill=(0, 255, 0))
           disp.display(img)
           time.sleep(2)
           subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
