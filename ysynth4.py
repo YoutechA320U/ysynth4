@@ -588,9 +588,11 @@ while True:
     if GPIO.input(input_OK) == 0: 
        if mode==2 and mode2_coordi ==4:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          disp.display(img)
           subprocess.call("sudo rm -f /home/pi/ysynth4/ysynth4.py" , shell=True)
           subprocess.call("sudo wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/" ,shell=True)
+          draw.text((3,60),"最新版をダウンロードします...",  font=fontl, fill=(0, 255, 0))
+          disp.display(img)
+          time.sleep(2)
           subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
        
        if mode==2 and mode2_coordi ==5:
