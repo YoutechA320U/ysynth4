@@ -115,6 +115,71 @@ mode0_coordi_yl=[t_size_l_y/4,t_size_l_y+t_size_m_y+1,\
       t_size_l_y+t_size_m_y*4+1,t_size_l_y+t_size_m_y*5+1,\
          t_size_l_y+t_size_m_y*6+1,t_size_l_y+t_size_m_y*7+1,\
             t_size_l_y+t_size_m_y+1,t_size_l_y+t_size_m_y*2+1]
+
+mode1_coordi=0
+mode1_coordi_xl=[3,3]
+mode1_coordi_yl=[t_size_l_y+t_size_m_y+1, t_size_l_y+t_size_m_y*2+1]
+
+mode2_coordi=0
+mode2_coordi_xl=[3,3,3,3,3,3,3]
+mode2_coordi_yl=[t_size_l_y+t_size_m_y+1,t_size_l_y+t_size_m_y*2+1,\
+   t_size_l_y+t_size_m_y*3+1,t_size_l_y+t_size_m_y*4+1,\
+      t_size_l_y+t_size_m_y*5+1,t_size_l_y+t_size_m_y*6+1,\
+         t_size_l_y+t_size_m_y*7+1,]
+
+def mode0_default_disp():
+   draw.rectangle((0, 0, 160, 128), (0,0,0))
+   draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
+   draw.text((cur_size_x+x, 0),"CH:",  font=fontl, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"PC :", font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"VOL:",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"EXP:",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"PAN:",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"MOD:",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"REV:", font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"CHO:",  font=fontm, fill=(55, 255, 255))
+   draw.text((t_size_l_x*4, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
+   draw.text((cur_size_x+t_size_m_x*10, t_size_l_y+t_size_m_y+1),"DLY   :", font=fontm, fill=(55, 255, 255))
+   draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
+   draw.text((cur_size_x+t_size_m_x*10, t_size_l_y+t_size_m_y*2+1),"P.BEND:", font=fontm, fill=(55, 255, 255))
+   draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
+   disp.display(img)
+
+def mode1_default_disp():
+   draw.rectangle((0, 0, 160, 128), (0,0,0))
+   draw.text((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
+   draw.text((cur_size_x+x, 0),"SMF",  font=fontl, fill=(255, 255, 55))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"SF2:", font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"SMF:",  font=fontm, fill=(55, 255, 255))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),"SGM-V2.01.sf2 ♪", font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),"FeldschlachtI.mid ▶",  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
+   disp.display(img)
+
+def mode2_default_disp():
+   draw.rectangle((0, 0, 160, 128), (0,0,0))
+   draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
+   draw.text((cur_size_x+x, 0),"設定",  font=fontl, fill=(255, 255, 55))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"SF2:", font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"WiFi:",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"Audio:",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"USBメモリ取り出し",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"Ysynth4アップデート",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"再起動", font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
+   draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),"SGM-V2.01.sf2 ♪", font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y*2+1),"F660A-*******",  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*3+1),"IQaudIODAC",  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
+   disp.display(img)
 ##初期設定ここまで##
 
 msg = None
@@ -131,29 +196,7 @@ subprocess.call('aconnect 20:0 128:1', shell=True)
 subprocess.call('aconnect 20:0 24:0', shell=True)
 subprocess.call('aconnect 20:0 131:0', shell=True)
 
-draw.text((x, t_size_l_y/4),cur_size,  font=fonts, fill=(255, 255, 255))
-draw.text((cur_size_x+x, 0),"CH:",  font=fontl, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"PC :", font=fontm, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"VOL:",  font=fontm, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"EXP:",  font=fontm, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"PAN:",  font=fontm, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"MOD:",  font=fontm, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"REV:", font=fontm, fill=(55, 255, 255))
-draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"CHO:",  font=fontm, fill=(55, 255, 255))
-draw.text((t_size_l_x*4, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
-draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
-draw.text((cur_size_x+t_size_m_x*10, t_size_l_y+t_size_m_y+1),"DLY   :", font=fontm, fill=(55, 255, 255))
-draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
-draw.text((cur_size_x+t_size_m_x*10, t_size_l_y+t_size_m_y*2+1),"P.BEND:", font=fontm, fill=(55, 255, 255))
-draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
-draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
-disp.display(img)
+mode0_default_disp()
 
 while True:
     msg = midiin.get_message()
@@ -475,15 +518,30 @@ while True:
           mode0_coordi -=1
           if mode0_coordi <0:
              mode0_coordi=9
-          draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
-          disp.display(img)   
-          while (GPIO.input(input_UP) == 0 and longpush !=100): 
-                time.sleep(0.01)
-                longpush +=1
-                if longpush==100:
-                   break
-                else:
-                  continue   
+          draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))   
+          disp.display(img) 
+       if mode==1 and GPIO.input(input_OK) != 0:
+          draw.rectangle((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi],mode1_coordi_xl[mode1_coordi]+cur_size_x, mode1_coordi_yl[mode1_coordi]+cur_size_y), (0,0,0))
+          mode1_coordi -=1
+          if mode1_coordi <0:
+             mode1_coordi=1
+          draw.text((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi]),cur_size,  font=fonts, fill=(255, 255, 255)) 
+          disp.display(img)  
+       if mode==2 and GPIO.input(input_OK) != 0:
+          draw.rectangle((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi],mode2_coordi_xl[mode2_coordi]+cur_size_x, mode2_coordi_yl[mode2_coordi]+cur_size_y), (0,0,0))
+          mode2_coordi -=1
+          if mode2_coordi <0:
+             mode2_coordi=6
+          draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
+          disp.display(img) 
+       while (GPIO.input(input_UP) == 0 and longpush !=100): 
+             time.sleep(0.01)
+             longpush +=1
+             if longpush==100:
+                break
+             else:
+               continue   
+
     if GPIO.input(input_DOWN) == 0: 
        time.sleep(0.01)
        if mode==0 and GPIO.input(input_OK) != 0:
@@ -493,32 +551,66 @@ while True:
              mode0_coordi=0
           draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255)) 
           disp.display(img)
-          while (GPIO.input(input_DOWN) == 0 and longpush !=100): 
-                time.sleep(0.01)
-                longpush +=1
-                if longpush==100:
-                   break
-                else:
-                  continue
-    if GPIO.input(input_MODE) == 0:  
-       time.sleep(0.01)
-       mode +=1
-       if mode>0:
-          mode=0
-       while (GPIO.input(input_MODE)) == 0: 
-             continue 
-    if GPIO.input(input_OK) == 0: 
-       time.sleep(0.01)
-       if mode==0 and mode0_coordi !=0:
-          if GPIO.input(input_UP) == 0:
+       if mode==1 and GPIO.input(input_OK) != 0:
+          draw.rectangle((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi],mode1_coordi_xl[mode1_coordi]+cur_size_x, mode1_coordi_yl[mode1_coordi]+cur_size_y), (0,0,0))
+          mode1_coordi +=1
+          if mode1_coordi >1:
+             mode1_coordi=0
+          draw.text((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi]),cur_size,  font=fonts, fill=(255, 255, 255)) 
+          disp.display(img)  
+       if mode==2 and GPIO.input(input_OK) != 0:
+          draw.rectangle((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi],mode2_coordi_xl[mode2_coordi]+cur_size_x, mode2_coordi_yl[mode2_coordi]+cur_size_y), (0,0,0))
+          mode2_coordi +=1
+          if mode2_coordi >6:
+             mode2_coordi=0
+          draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
+          disp.display(img) 
+       while (GPIO.input(input_DOWN) == 0 and longpush !=100): 
              time.sleep(0.01)
-             volume +=1
-             if volume>100:
-                volume=0
-             subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
-             draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
-             draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
-             disp.display(img)
+             longpush +=1
+             if longpush==100:
+                break
+             else:
+               continue
+    if GPIO.input(input_MODE) == 0:  
+       time.sleep(0.1)
+       mode +=1
+       if mode>2:
+          mode=0
+          mode0_default_disp()       
+       if mode==1:
+          mode1_default_disp()
+       if mode==2:      
+          mode2_default_disp()
+       while (GPIO.input(input_MODE)) == 0: 
+          continue 
+
+    if GPIO.input(input_OK) == 0: 
+       if mode==2 and mode2_coordi ==4:
+          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+          disp.display(img)
+          subprocess.call("sudo rm -f /home/pi/ysynth4/ysynth4.py" , shell=True)
+          subprocess.call("sudo wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py" ,shell=True)
+          subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+       
+       if mode==2 and mode2_coordi ==5:
+          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+          disp.display(img)
+          subprocess.Popen("sudo reboot" ,shell=True)
+       if mode==2 and mode2_coordi ==6:
+          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+          disp.display(img)
+          subprocess.Popen("sudo shutdown -h now" ,shell=True)
+       time.sleep(0.01)
+       if GPIO.input(input_UP) == 0:
+          time.sleep(0.01)
+          volume +=1
+          if volume>100:
+             volume=0
+          subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
+          draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
+          draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
+          disp.display(img)
           while GPIO.input(input_UP) == 0 and longpush !=100: 
                 time.sleep(0.01)
                 longpush +=1
@@ -526,24 +618,22 @@ while True:
                    break
                 else:
                   continue
-          if GPIO.input(input_DOWN) == 0:
-             time.sleep(0.01)
-             volume -=1
-             if volume<0:
-                volume=100
-             subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
-             draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
-             draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
-             disp.display(img)
+       if GPIO.input(input_DOWN) == 0:
+          time.sleep(0.01)
+          volume -=1
+          if volume<0:
+             volume=100
+          subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
+          draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
+          draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
+          disp.display(img)
           while GPIO.input(input_DOWN) == 0 and longpush !=100: 
                 time.sleep(0.01)
                 longpush +=1
                 if longpush==100:
                    break
                 else:
-                  continue
-       if mode==0 and mode0_coordi ==0: 
-          subprocess.Popen("sudo shutdown -h now" ,shell=True)        
+                  continue     
     if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
        longpush=0 
     if msg is None:         
