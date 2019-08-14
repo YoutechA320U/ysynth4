@@ -18,11 +18,11 @@ disp = ST7735.ST7735(
     port=0,
     cs=0,  # BG_SPI_CSB_BACK or BG_SPI_CS_FRONT
     dc=12, 
-    rst=25,             # 18 for back BG slot, 19 for front BG slot.
+    rst=25,            
     rotation=90,
     width=128,
     height=160,
-    spi_speed_hz=62000000
+    spi_speed_hz=48000000
 )
 
 
