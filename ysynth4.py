@@ -176,7 +176,7 @@ def mode2_default_disp():
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"再起動", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
    draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),"SGM-V2.01.sf2 ♪", font=fontm, fill=(255, 255, 55))
-   draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y*2+1),"F660A-******G",  font=fontm, fill=(255, 255, 55))
+   draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y*2+1),"*************",  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*3+1),"IQaudIODAC",  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
    disp.display(img)
@@ -588,9 +588,9 @@ while True:
     if GPIO.input(input_OK) == 0: 
        if mode==2 and mode2_coordi ==4:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          subprocess.call("sudo rm -f /home/pi/ysynth4/ysynth4.py" , shell=True)
           subprocess.call("sudo wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/" ,shell=True)
           draw.text((3,60),"最新版をダウンロードします...",  font=fonts, fill=(0, 255, 0))
+          subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
           disp.display(img)
           time.sleep(2)
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
@@ -599,9 +599,17 @@ while True:
        
        if mode==2 and mode2_coordi ==5:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+          draw.text((3,60),"再起動します...",  font=fonts, fill=(0, 255, 0))
+          disp.display(img)
+          time.sleep(2)
+          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
           disp.display(img)
           subprocess.Popen("sudo reboot" ,shell=True)
        if mode==2 and mode2_coordi ==6:
+          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+          draw.text((3,60),"シャットダウンします...",  font=fonts, fill=(0, 255, 0))
+          disp.display(img)
+          time.sleep(2)
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
           disp.display(img)
           subprocess.Popen("sudo shutdown -h now" ,shell=True)
