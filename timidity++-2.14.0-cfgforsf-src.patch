@@ -1,0 +1,47 @@
+--- TiMidity++-2.14.0.orig/interface/dumb_c.c
++++ TiMidity++-2.14.0/interface/dumb_c.c
+@@ -51,7 +51,9 @@
+ static void ctl_total_time(long tt);
+ static void ctl_file_name(char *name);
+ static void ctl_current_time(int ct);
++#ifndef CFG_FOR_SF
+ static void ctl_lyric(int lyricid);
++#endif
+ static void ctl_event(CtlEvent *e);
+ 
+ /**********************************/
+@@ -161,6 +163,7 @@
+     }
+ }
+ 
++#ifndef CFG_FOR_SF
+ static void ctl_lyric(int lyricid)
+ {
+     char *lyric;
+@@ -199,6 +202,7 @@
+ 	}
+     }
+ }
++#endif
+ 
+ static void ctl_event(CtlEvent *e)
+ {
+--- TiMidity++-2.14.0.orig/timidity/sndfont.c
++++ TiMidity++-2.14.0/timidity/sndfont.c
+@@ -66,6 +66,8 @@
+  *----------------------------------------------------------------*/
+ 
+ #ifdef CFG_FOR_SF
++#include "freq.h"
++int opt_surround_chorus = 0;
+ #define SF_SUPPRESS_ENVELOPE
+ #define SF_SUPPRESS_TREMOLO
+ #define SF_SUPPRESS_VIBRATO
+@@ -1615,7 +1617,6 @@
+ 
+  *********************************************************************/
+ 
+-#include "freq.h"
+ 
+ #define CFG_FOR_SF_SUPPORT_FFT	1
+ 
