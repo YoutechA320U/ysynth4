@@ -60,7 +60,7 @@ playflag = [0]
 sf2used = [0]
 pbcounter =[0]*16
 midicounter = 0
-sf2counter = 0
+sf2counter = 4
 dialog_open=0
 longpush=0
 
@@ -99,7 +99,7 @@ if (sf2 != cfg) and (sf2[0] != "sf2_None"):
  list_difference = [l.replace(' ', '\ ') for l in list_difference]
  for x in range(len(list_difference)):
   print(list_difference[x])
-  subprocess.call('sudo rm /home/pi/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
+  subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
  list_difference = list(set(sf2) - set(cfg))
  list_difference = [l.replace(' ', '\ ') for l in list_difference]
  for x in range(len(list_difference)):
@@ -299,7 +299,7 @@ subprocess.call('aconnect 129:0 131:0', shell=True)
 subprocess.call('aconnect 128:0 20:0', shell=True)
 subprocess.call('aconnect 129:0 20:0', shell=True)
 subprocess.call('aconnect 20:0 130:0', shell=True)
-subprocess.call('aconnect 20:0 128:1', shell=True)
+#subprocess.call('aconnect 20:0 128:1', shell=True)
 subprocess.call('aconnect 20:0 24:0', shell=True)
 subprocess.call('aconnect 20:0 131:0', shell=True)
 
@@ -724,7 +724,7 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    認識させますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("    認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0","on")
+             dialog_loop0("    認識します...", "sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0","on")
           if mountcheck == str("/media/usb0"):          
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
