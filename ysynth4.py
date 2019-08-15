@@ -231,7 +231,7 @@ def dialog_window():
    draw.text((101,90),"いいえ",  font=fonts, fill=(0, 0, 0))
    disp.display(img)
 
-def dialog_loop0(txt, cmd):
+def dialog_loop0(txt, cmd, *restarter):
     global dialog_coordi, dialog_coordi_xl, dialog_coordi_yl, dialog_open
     while (GPIO.input(input_OK)) == 0: 
           continue 
@@ -277,6 +277,8 @@ def dialog_loop0(txt, cmd):
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              disp.display(img)
              subprocess.call(cmd ,shell=True)
+             if restarter is not None:
+                subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
              dialog_open=0
           if dialog_coordi==1:
              while (GPIO.input(input_OK)) == 0: 
@@ -717,32 +719,29 @@ while True:
           time.sleep(0.05)
           dialog_open=1
           dialog_window()
-          mountcheck=subprocess.check_output("mount|grep /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
+          mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
           if mountcheck != str("/media/usb0"):
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    認識させますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("    認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0")
-             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+             dialog_loop0("    認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0","on")
           if mountcheck == str("/media/usb0"):          
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("    取り出します...", "sudo umount /media/usb0/")
-             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+             dialog_loop0("    取り出します...", "sudo umount /media/usb0/","on")
+
 
        if mode==2 and mode2_coordi ==4:
           time.sleep(0.05)
           dialog_open=1
           dialog_window()
-          draw.text((11, t_size_l_y+t_size_m_y*2+1),"アップデートしますか?",  font=fonts, fill=(0, 0, 0))
+          draw.text((11, t_size_l_y+t_size_m_y*2+1)," アップデートしますか?",  font=fonts, fill=(0, 0, 0))
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
           dialog_loop0("    ダウンロード中...", "wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/")
-         
           latest_dl =int(subprocess.check_output("test -f /home/pi/ysynth4/ysynth4.py.1;echo $?" ,shell=True).decode('utf-8').strip())
-          print(latest_dl)
-          if latest_dl == 1:
+          if latest_dl == 1 and dialog_coordi==0:
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              draw.text((3,60),"    ダウンロード失敗",  font=fonts, fill=(0, 255, 0))
              disp.display(img)
