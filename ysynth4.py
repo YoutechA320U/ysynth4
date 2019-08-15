@@ -277,6 +277,7 @@ def dialog_loop0(txt, cmd):
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              disp.display(img)
              subprocess.call(cmd ,shell=True)
+             break
           if dialog_coordi==1:
              while (GPIO.input(input_OK)) == 0: 
                    continue 
