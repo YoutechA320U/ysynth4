@@ -722,7 +722,7 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    認識させますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("  認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0")
+             dialog_loop0("    認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0")
              subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
           if mountcheck == str("/media/usb0"):          
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fonts, fill=(0, 0, 0))
@@ -752,7 +752,6 @@ while True:
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
              subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
-             time.sleep(2)
              subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
              disp.display(img)
              time.sleep(2)
