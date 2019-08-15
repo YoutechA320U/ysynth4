@@ -751,6 +751,7 @@ while True:
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
              subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
+             subprocess.call('sudo chown -R pi:pi /home/pi/ysynth4/' ,shell=True)
              disp.display(img)
              time.sleep(2)
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
