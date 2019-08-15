@@ -60,8 +60,8 @@ playflag = [0]
 sf2used = [0]
 pbcounter =[0]*16
 midicounter = 0
-
-
+sf2counter = 0
+dialog_open=0
 longpush=0
 
 input_OK = 16
@@ -108,10 +108,6 @@ if (sf2 != cfg) and (sf2[0] != "sf2_None"):
 if sf2[0] == "sf2_None":
    subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
 
-sf2counter = 9
-
-print(sf2)
-#print(sf2[sf2counter])
 
 subprocess.call('sudo killall ttymidi', shell=True)
 subprocess.call('sudo killall timidity', shell=True)
@@ -131,7 +127,8 @@ subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=Tru
 wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
 if wifi_ssid=="off/any":
    wifi_ssid="接続していません" 
-audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', ''))
+#wifi_ssid="**********"
+audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', '').replace(',', ''))
 fonts = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 12, encoding='unic')
 fontm = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
 fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
@@ -165,6 +162,10 @@ mode2_coordi_yl=[t_size_l_y+t_size_m_y+1,t_size_l_y+t_size_m_y*2+1,\
    t_size_l_y+t_size_m_y*3+1,t_size_l_y+t_size_m_y*4+1,\
       t_size_l_y+t_size_m_y*5+1,t_size_l_y+t_size_m_y*6+1,\
          t_size_l_y+t_size_m_y*7+1,]
+
+dialog_coordi=1
+dialog_coordi_xl=[12,82]
+dialog_coordi_yl=[90,90]
 
 
 def mode0_default_disp():
@@ -211,7 +212,7 @@ def mode2_default_disp():
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"SF2:", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"WiFi:",  font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"Audio:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"USBメモリ取り出し",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"USBメモリ",  font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"Ysynth4アップデート",  font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"再起動", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
@@ -230,6 +231,60 @@ def dialog_window():
    draw.text((101,90),"いいえ",  font=fonts, fill=(0, 0, 0))
    disp.display(img)
 
+def dialog_loop0(txt, cmd):
+    global dialog_coordi, dialog_coordi_xl, dialog_coordi_yl, dialog_open
+    while (GPIO.input(input_OK)) == 0: 
+          continue 
+    while dialog_open==1:
+       time.sleep(0.00001)   
+       if GPIO.input(input_RIGHT) == 0 :
+          time.sleep(0.01)
+          draw.rectangle((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi],dialog_coordi_xl[dialog_coordi]+cur_size_x, dialog_coordi_yl[dialog_coordi]+cur_size_y),(217,207,201))
+          dialog_coordi +=1
+          if dialog_coordi >1:
+             dialog_coordi=0
+          draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
+          disp.display(img)
+          while (GPIO.input(input_LEFT) == 0 and longpush !=100) or (GPIO.input(input_RIGHT) == 0 and longpush !=100): 
+                time.sleep(0.01)
+                longpush +=1
+                if longpush==100:
+                   break
+                else:
+                   continue
+       if GPIO.input(input_LEFT) == 0 :
+          time.sleep(0.01)
+          draw.rectangle((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi],dialog_coordi_xl[dialog_coordi]+cur_size_x, dialog_coordi_yl[dialog_coordi]+cur_size_y),(217,207,201))
+          dialog_coordi -=1
+          if dialog_coordi <0:
+             dialog_coordi=1
+          draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))   
+          disp.display(img)
+          while (GPIO.input(input_LEFT) == 0 and longpush !=100): 
+                time.sleep(0.01)
+                longpush +=1
+                if longpush==100:
+                   break
+                else:
+                   continue
+       if GPIO.input(input_OK) == 0:
+          time.sleep(0.05)
+          if dialog_coordi==0:
+             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+             draw.text((3,60),txt,  font=fonts, fill=(0, 255, 0))
+             disp.display(img)
+             time.sleep(2)
+             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+             disp.display(img)
+             subprocess.call(cmd ,shell=True)
+             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+          if dialog_coordi==1:
+             while (GPIO.input(input_OK)) == 0: 
+                   continue 
+             dialog_open=0 
+             mode2_default_disp()
+       if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT))== 1:  
+          longpush=0 
 ##初期設定ここまで##
 
 msg = None
@@ -636,8 +691,44 @@ while True:
           continue 
 
     if GPIO.input(input_OK) == 0: 
+       time.sleep(0.01)
+       if mode==2 and mode2_coordi ==2:
+          time.sleep(0.05)
+          dialog_open=1
+          dialog_window()
+          if audio_card == str("IQaudIODAC"):
+             draw.text((11, t_size_l_y+t_size_m_y*2+1)," bcm2835に切り替えます",  font=fonts, fill=(0, 0, 0))
+             draw.text((11, t_size_l_y+t_size_m_y*3+1),"か?(再起動します)",  font=fonts, fill=(0, 0, 0))
+             draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
+             disp.display(img)
+             subprocess.call("sudo sed -i -e '$ a /dtparam=audio=on' /boot/config.txt" ,shell=True)
+             subprocess.call("sudo sed -i -e 'dtoverlay=iqaudio-dacplus/d' /boot/config.txt" ,shell=True)
+             dialog_loop0("  再起動します...", "sudo reboot")
+          if audio_card == str("bcm2835"):          
+             draw.text((11, t_size_l_y+t_size_m_y*2+1)," IQaudIODACに切り替えま",  font=fonts, fill=(0, 0, 0))
+             draw.text((11, t_size_l_y+t_size_m_y*3+1),"すか?(再起動します)",  font=fonts, fill=(0, 0, 0))
+             draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
+             disp.display(img)
+             subprocess.call("sudo sed -i -e '$ a dtoverlay=iqaudio-dacplus' /boot/config.txt" ,shell=True)
+             subprocess.call("sudo sed -i -e '/dtparam=audio=on/d' /boot/config.txt" ,shell=True)
+             dialog_loop0("  再起動します...", "sudo reboot")
+
        if mode==2 and mode2_coordi ==3:
-          subprocess.call('sudo umount /media/usb0/', shell=True)
+          time.sleep(0.05)
+          dialog_open=1
+          dialog_window()
+          mountcheck=subprocess.check_output("mount|grep /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
+          if mountcheck != str("/media/usb0"):
+             draw.text((11, t_size_l_y+t_size_m_y*2+1),"    認識させますか?",  font=fonts, fill=(0, 0, 0))
+             draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
+             disp.display(img)
+             dialog_loop0("  認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0")
+          if mountcheck == str("/media/usb0"):          
+             draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fonts, fill=(0, 0, 0))
+             draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
+             disp.display(img)
+             dialog_loop0("    取り出します...", "sudo umount /media/usb0/")
+
        if mode==2 and mode2_coordi ==4:
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
           draw.text((3,60),"    ダウンロード中...",  font=fonts, fill=(0, 255, 0))
@@ -662,27 +753,25 @@ while True:
              subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
        
        if mode==2 and mode2_coordi ==5:
-          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          draw.text((3,60),"      再起動します...",  font=fonts, fill=(0, 255, 0))
+          time.sleep(0.05)
+          dialog_open=1
+          dialog_window()
+          draw.text((11, t_size_l_y+t_size_m_y*2+1),"     再起動しますか?",  font=fonts, fill=(0, 0, 0))
+          draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
-          time.sleep(2)
-          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          disp.display(img)
-          subprocess.Popen("sudo reboot" ,shell=True)
+          dialog_loop0("  再起動します...", "sudo reboot")
+
+
        if mode==2 and mode2_coordi ==6:
+          time.sleep(0.05)
+          dialog_open=1
           dialog_window()
           draw.text((11, t_size_l_y+t_size_m_y*2+1),"シャットダウンしますか?",  font=fonts, fill=(0, 0, 0))
-          draw.text((12, 90),cur_size,  font=fonts, fill=(0, 0, 0))
+          draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
-
-          #draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          #draw.text((3,60),"  シャットダウンします...",  font=fonts, fill=(0, 255, 0))
-          #disp.display(img)
-          #time.sleep(2)
-          #draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          #disp.display(img)
-          #subprocess.Popen("sudo shutdown -h now" ,shell=True)
-       time.sleep(0.01)
+          dialog_loop0("  シャットダウンします...", "sudo shutdown -h now")
+          
+            
        if GPIO.input(input_UP) == 0:
           time.sleep(0.01)
           volume +=1
@@ -715,6 +804,7 @@ while True:
                    break
                 else:
                   continue     
+             
     if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
        longpush=0 
     if msg is None:         
