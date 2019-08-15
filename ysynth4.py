@@ -277,7 +277,6 @@ def dialog_loop0(txt, cmd):
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              disp.display(img)
              subprocess.call(cmd ,shell=True)
-             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
           if dialog_coordi==1:
              while (GPIO.input(input_OK)) == 0: 
                    continue 
@@ -723,17 +722,23 @@ while True:
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
              dialog_loop0("  認識します...", "sudo mount -t vfat /dev/sda1 /media/usb0")
+             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
           if mountcheck == str("/media/usb0"):          
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
              dialog_loop0("    取り出します...", "sudo umount /media/usb0/")
+             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
 
        if mode==2 and mode2_coordi ==4:
-          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-          draw.text((3,60),"    ダウンロード中...",  font=fonts, fill=(0, 255, 0))
+          time.sleep(0.05)
+          dialog_open=1
+          dialog_window()
+          draw.text((11, t_size_l_y+t_size_m_y*2+1),"アップデートしますか?",  font=fonts, fill=(0, 0, 0))
+          draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
-          subprocess.call("wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/" ,shell=True)
+          dialog_loop0("    ダウンロード中...", "wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/")
+         
           latest_dl =int(subprocess.check_output("test -f /home/pi/ysynth4/ysynth4.py.1;echo $?" ,shell=True).decode('utf-8').strip())
           print(latest_dl)
           if latest_dl == 1:
