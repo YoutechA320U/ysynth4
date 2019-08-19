@@ -909,10 +909,7 @@ while True:
                 subprocess.call('sudo chown -R pi:pi /media/usb0/timidity_cfg' ,shell=True)
               if sf2[0] == "sf2_None":
                  subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
-              subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
-              time.sleep(2)
               dialog_coordi=1
-              subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
               mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
               mode2_default_disp()
 
