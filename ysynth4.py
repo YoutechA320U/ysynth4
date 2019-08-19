@@ -122,7 +122,7 @@ def boot_disp():
        draw.text((35, 1+x-32),"Ysynth4",  font=fontll, fill=(55, 255, 255))
     if mountcheck != str("/media/usb0"):
        draw.rectangle((40, 1+x-32, 120, 1+x-10),outline=(100,100,100), fill=(55, 255, 255))
-    draw.text((35, 100),"v0.1/2019/08/19", font=fonts, fill=(55, 255, 255))
+    draw.text((35, 100),"v0.2/2019/08/20", font=fonts, fill=(55, 255, 255))
     draw.text((40, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
     time.sleep(0.01)
     disp.display(img)
