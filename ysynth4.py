@@ -60,7 +60,7 @@ playflag = [0]
 sf2used = [0]
 pbcounter =[0]*16
 midicounter = 0
-sf2counter = 4
+sf2counter = 0
 dialog_open=0
 longpush=0
 
@@ -135,15 +135,6 @@ mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,s
 fonts = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 12, encoding='unic')
 fontm = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
 fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
-#fonts = ImageFont.truetype('/home/pi/CodeMFont/SemiHalfGothic.ttf', 12, encoding='unic')
-#fontm = ImageFont.truetype('/home/pi/CodeMFont/SemiHalfGothic.ttf', 14, encoding='unic')
-#fontl = ImageFont.truetype('/home/pi/CodeMFont/SemiHalfGothic.ttf', 20, encoding='unic')
-
-#ipamp-mona.ttf
-#ipagui-mona.ttf  
-#ipag-mona.ttf    
-#ipam-mona.ttf
-#ipagp-mona.ttf
 
 x = 3
 y = 0
@@ -168,10 +159,10 @@ mode1_coordi_xl=[3,3]
 mode1_coordi_yl=[t_size_l_y+t_size_m_y+8, t_size_l_y+t_size_m_y*3+8]
 
 mode2_coordi=0
-mode2_coordi_xl=[3,3,3,3,3,3]
+mode2_coordi_xl=[3,3,3,3,3,3,3]
 mode2_coordi_yl=[t_size_l_y+t_size_m_y+1,t_size_l_y+t_size_m_y*2+1,\
    t_size_l_y+t_size_m_y*3+1,t_size_l_y+t_size_m_y*4+1,\
-      t_size_l_y+t_size_m_y*5+1,t_size_l_y+t_size_m_y*6+1]
+      t_size_l_y+t_size_m_y*5+1,t_size_l_y+t_size_m_y*6+1,t_size_l_y+t_size_m_y*7+1]
 
 dialog_coordi=1
 dialog_coordi_xl=[12,82]
@@ -213,6 +204,8 @@ def mode1_default_disp():
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
    if sf2used[sf2counter]==1:
       draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+   if playflag[midicounter]==1:
+      draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
    disp.display(img)
@@ -227,6 +220,7 @@ def mode2_default_disp():
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"Ysynth4アップデート",  font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"再起動", font=fontm, fill=(55, 255, 255))
    draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
+   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"リロード",  font=fontm, fill=(55, 255, 255))
    draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),wifi_ssid,  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*2+1),audio_card,  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
@@ -280,18 +274,13 @@ def dialog_loop0(txt, cmd):
        if GPIO.input(input_OK) == 0:
           time.sleep(0.05)
           if dialog_coordi==0:
-             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-             draw.text((3,60),txt,  font=fonts, fill=(0, 255, 0))
-             disp.display(img)
-             time.sleep(2)
-             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-             disp.display(img)
              subprocess.Popen(cmd ,shell=True)
+             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              draw.text((3,60),txt,  font=fonts, fill=(0, 255, 0))
              disp.display(img)
              time.sleep(3)
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-             disp.display(img)
+             time.sleep(1)
              dialog_open=0
           if dialog_coordi==1:
              while (GPIO.input(input_OK)) == 0: 
@@ -303,13 +292,22 @@ def dialog_loop0(txt, cmd):
 ##初期設定ここまで##
 
 msg = None
-subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
-time.sleep(2)
-subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
+#subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
+#time.sleep(2)
+#subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
 
 mode0_default_disp()
 
 while True:
+    try:
+     if aplaymidi.poll() is not None:
+        if mode == 1 and playflag[midicounter] == 1:
+           draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+           disp.display(img)
+        playflag = [0]*len(midi)
+    except:
+     pass
+
     msg = midiin.get_message()
     #print(msg)
     if msg is None:
@@ -521,6 +519,8 @@ while True:
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
                  draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+             if playflag[midicounter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
           if mode1_coordi ==1:
              midicounter -= 1
@@ -532,7 +532,9 @@ while True:
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
-             disp.display(img) 
+             if playflag[midicounter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+             disp.display(img)
 
 
        while (GPIO.input(input_LEFT) == 0 and longpush !=100): 
@@ -653,6 +655,8 @@ while True:
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+             if playflag[midicounter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
           if mode1_coordi ==1:
              midicounter += 1
@@ -663,7 +667,9 @@ while True:
              draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}".format(midicounter + 1),  font=fontm, fill=(55, 255, 255))
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))  
              if sf2used[sf2counter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))        
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))  
+             if playflag[midicounter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img) 
 
        while (GPIO.input(input_RIGHT) == 0 and longpush !=100): 
@@ -693,7 +699,7 @@ while True:
           draw.rectangle((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi],mode2_coordi_xl[mode2_coordi]+cur_size_x, mode2_coordi_yl[mode2_coordi]+cur_size_y), (0,0,0))
           mode2_coordi -=1
           if mode2_coordi <0:
-             mode2_coordi=5
+             mode2_coordi=6
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
        while (GPIO.input(input_UP) == 0 and longpush !=100): 
@@ -723,7 +729,7 @@ while True:
        if mode==2 and GPIO.input(input_OK) != 0:
           draw.rectangle((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi],mode2_coordi_xl[mode2_coordi]+cur_size_x, mode2_coordi_yl[mode2_coordi]+cur_size_y), (0,0,0))
           mode2_coordi +=1
-          if mode2_coordi >5:
+          if mode2_coordi >6:
              mode2_coordi=0
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
@@ -748,6 +754,9 @@ while True:
           if sf2used[sf2counter]==1:
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
              disp.display(img)
+          if playflag[midicounter]==1:
+             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+             disp.display(img)
        if mode==2:      
           mode2_default_disp()
        while (GPIO.input(input_MODE)) == 0: 
@@ -755,15 +764,17 @@ while True:
 
     if GPIO.input(input_OK) == 0: 
        time.sleep(0.01)        
-       if mode==1 and mode1_coordi ==0 and sf2used[sf2counter]==0:  
+       if mode==1 and mode1_coordi ==0 and sf2used[sf2counter]==0 and sf2[0] != "sf2_None":  
           time.sleep(0.05)
           sf2used = [0]*len(sf2)
           sf2used[sf2counter]=1
           draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+          draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
           draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        Wait...", font=fontm, fill=(55, 255, 255))
           disp.display(img)
           subprocess.call('sudo killall timidity', shell=True)
           subprocess.call('sudo killall aplaymidi', shell=True)
+          playflag = [0]*len(midi)
           sf2 = [s.replace(' ', '\ ') for s in sf2]
           subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
           sf2 = [s.replace('\ ', ' ') for s in sf2]
@@ -775,22 +786,34 @@ while True:
           time.sleep(2)
           mode1_default_disp()
 
-       if mode==1 and mode1_coordi ==1 and playflag[midicounter]==0: 
-          time.sleep(0.05)
-          playflag = [0]*len(midi)
-          playflag[midicounter]=1
-          draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-          subprocess.call('sudo killall aplaymidi', shell=True)
-          midi = [s.replace(' ', '\ ') for s in midi]
-          subprocess.Popen('aplaymidi -p 14:0 /media/usb0/midi/{}.mid' .format(midi[midicounter]), shell=True)
-          midi = [s.replace('\ ', ' ') for s in midi]
-          time.sleep(2)
-          subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
-          draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-          draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ▶", font=fontm, fill=(55, 255, 255))
-          disp.display(img)
-          time.sleep(2)
-          mode1_default_disp()
+       if GPIO.input(input_OK) == 0 and  mode==1 and mode1_coordi ==1 : 
+          if playflag[midicounter]==0 and midi[0] != "midi_None":
+             time.sleep(0.05)
+             playflag = [0]*len(midi)
+             playflag[midicounter]=1
+             draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+             subprocess.call('sudo killall aplaymidi', shell=True)
+             allnoteoff()
+             midi = [s.replace(' ', '\ ') for s in midi]
+             aplaymidi = subprocess.Popen('aplaymidi -p 14:0 /media/usb0/midi/{}.mid' .format(midi[midicounter]), shell=True)
+             midi = [s.replace('\ ', ' ') for s in midi]
+             disp.display(img)
+             mode1_default_disp()
+             while (GPIO.input(input_OK)) == 0: 
+               continue 
+
+          if GPIO.input(input_OK) == 0 and playflag[midicounter]==1:
+             time.sleep(0.05)
+             playflag = [0]*len(midi)
+             draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+             allnoteoff()
+             subprocess.call('sudo killall aplaymidi', shell=True)
+             allnoteoff()
+             disp.display(img)
+             mode1_default_disp()
+             while (GPIO.input(input_OK)) == 0: 
+               continue 
 
        if mode==2 and mode2_coordi ==0:
           time.sleep(0.05)
@@ -853,7 +876,7 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    認識させますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("    認識します...", "sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0")
+             dialog_loop0("      認識します...", "sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0")
              if dialog_coordi==0:
               try:
                midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
@@ -883,7 +906,6 @@ while True:
                 subprocess.call('sudo chown -R pi:pi /media/usb0/timidity_cfg' ,shell=True)
               if sf2[0] == "sf2_None":
                  subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
-              sf2counter = 4
               subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
               time.sleep(2)
               dialog_coordi=1
@@ -896,6 +918,8 @@ while True:
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
              dialog_loop0("    取り出します...", "sudo umount /media/usb0/")
+             subprocess.call('sudo killall timidity', shell=True)
+             subprocess.call('sudo killall aplaymidi', shell=True)
              if dialog_coordi==0:
               try:
                midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
@@ -914,8 +938,6 @@ while True:
               except:
                cfg = [ ]
               dialog_coordi=1
-              subprocess.call('sudo killall timidity', shell=True)
-              subprocess.call('sudo killall aplaymidi', shell=True)
               time.sleep(2)
               mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
               mode2_default_disp()
@@ -966,9 +988,18 @@ while True:
           draw.text((11, t_size_l_y+t_size_m_y*2+1),"シャットダウンしますか?",  font=fonts, fill=(0, 0, 0))
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
-          dialog_loop0("  シャットダウンします...", "sudo shutdown -h now")
+          dialog_loop0("   シャットダウンします...", "sudo shutdown -h now")
           draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-            
+
+       if mode==2 and mode2_coordi ==6:
+          time.sleep(0.05)
+          dialog_open=1
+          dialog_window0()
+          draw.text((11, t_size_l_y+t_size_m_y*2+1),"   リロードしますか?",  font=fonts, fill=(0, 0, 0))
+          draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
+          disp.display(img)
+          dialog_loop0("    リロードします...", "sudo systemctl restart ysynth4.service")
+          draw.rectangle((0, 0, 160, 128), (0,0,0))             
        if GPIO.input(input_UP) == 0:
           time.sleep(0.01)
           volume +=1
