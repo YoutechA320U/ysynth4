@@ -40,7 +40,7 @@ draw = ImageDraw.Draw(img)
 #draw.rectangle((0,0,160, height), outline=0, fill=0)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
-volume = 100
+volume = 70
 mode = 0
 CC2 = 0
 CC1 = 0
