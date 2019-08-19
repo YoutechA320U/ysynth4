@@ -823,7 +823,7 @@ while True:
           time.sleep(0.05)
           dialog_open=1
           dialog_window0()
-          if wifi_ssid =="接続していません":
+          if wifi_ssid =="接続していません" or wifi_ssid =="OFF":
              draw.text((11, t_size_l_y+t_size_m_y*2+1)," WiFiに接続しますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
