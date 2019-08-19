@@ -639,13 +639,11 @@ while True:
              midiout.send_message([0xb0+midiCH, 94, midiCC94[midiCH]])
              disp.display(img)
           if mode0_coordi ==9:
-             if pb1[midiCH] != 0x7f:
-                pb1[midiCH] += 1
-             if pb1[midiCH] == 0x7f:
-                #pb1[midiCH] = 0
+             pb1[midiCH] += 1
+             if pb1[midiCH] > 0x7f:
+                pb1[midiCH] = 0
                 pb2[midiCH] += 1
                 if pb2[midiCH] > 0x7f:
-                   pb1[midiCH] = 0
                    pb2[midiCH] = 0
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
