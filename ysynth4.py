@@ -921,9 +921,9 @@ while True:
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
              dialog_loop0("    取り出します...", "sudo umount /media/usb0/")
-             subprocess.call('sudo killall timidity', shell=True)
-             subprocess.call('sudo killall aplaymidi', shell=True)
              if dialog_coordi==0:
+              subprocess.call('sudo killall timidity', shell=True)
+              subprocess.call('sudo killall aplaymidi', shell=True)
               try:
                midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
                playflag = [0]*len(midi)
