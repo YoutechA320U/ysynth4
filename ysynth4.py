@@ -78,6 +78,16 @@ GPIO.setup(input_RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(input_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(input_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(input_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+fonts = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 12, encoding='unic')
+fontm = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
+fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
+def boot_disp():
+   draw.rectangle((0, 0, 160, 128), (0,0,0))
+   draw.text((35, 40),"Ysynth4®",  font=ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 24, encoding='unic'), fill=(55, 255, 255))
+   draw.text((30, 100),"v0.1/2019/08/19", font=fonts, fill=(55, 255, 255))
+   draw.text((35, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
+   disp.display(img)
+boot_disp()
 
 try:
   midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
@@ -132,10 +142,6 @@ if wifi_ssid=="off/any":
 audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', '').replace(',', ''))
 mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
 
-fonts = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 12, encoding='unic')
-fontm = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 14, encoding='unic')
-fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 20, encoding='unic')
-
 x = 3
 y = 0
 m_size="A" #1文字分
@@ -167,7 +173,6 @@ mode2_coordi_yl=[t_size_l_y+t_size_m_y+1,t_size_l_y+t_size_m_y*2+1,\
 dialog_coordi=1
 dialog_coordi_xl=[12,82]
 dialog_coordi_yl=[90,90]
-
 
 def mode0_default_disp():
    draw.rectangle((0, 0, 160, 128), (0,0,0))
@@ -290,7 +295,7 @@ def dialog_loop0(txt, cmd):
        if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT))== 1:  
           longpush=0 
 ##初期設定ここまで##
-
+time.sleep(4)
 msg = None
 #subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
 #time.sleep(2)
