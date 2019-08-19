@@ -852,8 +852,7 @@ while True:
                 subprocess.call("sudo sed -i -e '$ a dtparam=audio=on' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtoverlay=iqaudio-dacplus/d' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo reboot" ,shell=True)
-
-             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+                
           if audio_card == str("bcm2835"):          
              draw.text((11, t_size_l_y+t_size_m_y*2+1)," IQaudIODACに切り替えま",  font=fonts, fill=(0, 0, 0))
              draw.text((11, t_size_l_y+t_size_m_y*3+1),"すか?(再起動します)",  font=fonts, fill=(0, 0, 0))
@@ -975,7 +974,6 @@ while True:
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
           dialog_loop0("    再起動します...", "sudo reboot")
-          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
 
 
        if mode==2 and mode2_coordi ==5:
@@ -986,7 +984,6 @@ while True:
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
           dialog_loop0("   シャットダウンします...", "sudo shutdown -h now")
-          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
 
        if mode==2 and mode2_coordi ==6:
           time.sleep(0.05)
@@ -995,8 +992,7 @@ while True:
           draw.text((11, t_size_l_y+t_size_m_y*2+1),"   リロードしますか?",  font=fonts, fill=(0, 0, 0))
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
-          dialog_loop0("    リロードします...", "sudo systemctl restart ysynth4.service")
-          draw.rectangle((0, 0, 160, 128), (0,0,0))             
+          dialog_loop0("    リロードします...", "sudo systemctl restart ysynth4.service")        
        if GPIO.input(input_UP) == 0:
           time.sleep(0.01)
           volume +=1
