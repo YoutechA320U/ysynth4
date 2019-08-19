@@ -22,7 +22,7 @@ disp = ST7735.ST7735(
     rotation=90,
     width=128,
     height=160,
-    spi_speed_hz=48000000
+    spi_speed_hz=40000000
 )
 
 
@@ -88,7 +88,7 @@ def boot_disp():
    draw.text((35, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
    disp.display(img)
 boot_disp()
-
+subprocess.call('sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0' ,shell=True)
 try:
   midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
   playflag = [0]*len(midi)
@@ -742,7 +742,7 @@ while True:
        mode +=1
        if mode>2:
           mode=0
-          if wifi_ssid !="OFF"
+          if wifi_ssid !="OFF":
              wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
           if wifi_ssid=="off/any":
              wifi_ssid="接続していません" 
