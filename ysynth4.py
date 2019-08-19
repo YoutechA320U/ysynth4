@@ -519,8 +519,6 @@ while True:
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
                  draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
-             if playflag[midicounter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
           if mode1_coordi ==1:
              midicounter -= 1
@@ -530,8 +528,6 @@ while True:
              draw.rectangle((cur_size_x+x, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
              draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}".format(midicounter + 1),  font=fontm, fill=(55, 255, 255))
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
-             if sf2used[sf2counter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
              if playflag[midicounter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
@@ -655,8 +651,6 @@ while True:
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
-             if playflag[midicounter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
           if mode1_coordi ==1:
              midicounter += 1
@@ -666,8 +660,6 @@ while True:
              draw.rectangle((cur_size_x+x, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
              draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}".format(midicounter + 1),  font=fontm, fill=(55, 255, 255))
              draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))  
-             if sf2used[sf2counter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))  
              if playflag[midicounter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img) 
