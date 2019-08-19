@@ -742,7 +742,8 @@ while True:
        mode +=1
        if mode>2:
           mode=0
-          wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
+          if wifi_ssid !="OFF"
+             wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
           if wifi_ssid=="off/any":
              wifi_ssid="接続していません" 
           mode0_default_disp()
@@ -820,7 +821,7 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*2+1)," WiFiに接続しますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("  オンにします...", "sudo ifup wlan0")
+             dialog_loop0("    オンにします...", "sudo ifup wlan0")
              if dialog_coordi==0:
                 wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
                 dialog_coordi=1
@@ -832,9 +833,9 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*2+1)," WiFiを切断しますか?",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("  オフにします...", "sudo ifdown wlan0")
+             dialog_loop0("    オフにします...", "sudo ifdown wlan0")
              if dialog_coordi==0:
-                wifi_ssid ="接続していません"
+                wifi_ssid ="OFF"
                 dialog_coordi=1
                 mode2_default_disp()
 
