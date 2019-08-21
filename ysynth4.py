@@ -100,14 +100,11 @@ except:
  cfg = [ ]
 if (sf2 != cfg) and (sf2[0] != "sf2_None"):
  list_difference = list(set(cfg) - set(sf2))
- list_difference = [l.replace(' ', '\ ') for l in list_difference]
  for x in range(len(list_difference)):
   subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
  list_difference = list(set(sf2) - set(cfg))
- list_difference = [l.replace(' ', '\ ') for l in list_difference]
  for x in range(len(list_difference)):
-  subprocess.call("sudo /home/pi/ysynth4/cfgforsf -C /media/usb0/sf2/{sf2name}.sf2 | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > /media/usb0/timidity_cfg/{sf2name}.cfg" .format(sf2name=list_difference[x])  ,shell=True)
- subprocess.call('sudo chown -R pi:pi /media/usb0/timidity_cfg' ,shell=True)
+  subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
 if sf2[0] == "sf2_None":
    subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
 
@@ -187,14 +184,14 @@ dialog_coordi_yl=[90,90]
 def mode0_default_disp():
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
-   draw.text((cur_size_x+x, 0),"CH:",  font=fontl, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"PC :", font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"VOL:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"EXP:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"PAN:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"MOD:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"REV:", font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"CHO:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, 0),"CH:",  font=fontl, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y+1),"PC :", font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*2+1),"VOL:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*3+1),"EXP:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*4+1),"PAN:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*5+1),"MOD:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*6+1),"REV:", font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*7+1),"CHO:",  font=fontm, fill=(55, 255, 255))
    draw.text((t_size_l_x*4, 0),str("{0:02}".format(midiCH + 1)),  font=fontl, fill=(255, 255, 55))
    draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
    draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
@@ -213,29 +210,29 @@ def mode0_default_disp():
 def mode1_default_disp():
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
-   draw.text((cur_size_x+x, 0),"SMF",  font=fontl, fill=(255, 255, 55))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"SF2:" +"{0:03d}".format(sf2counter + 1), font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"SMF:"+"{0:03d}".format(midicounter + 1), font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
+   draw.text((9, 0),"SMF",  font=fontl, fill=(255, 255, 55))
+   draw.text((9, t_size_l_y+t_size_m_y+1),"SF2:{0:03d}/{1:03d}" .format(sf2counter + 1 ,len(sf2)), font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*3+1),"SMF:{0:03d}/{1:03d}".format(midicounter + 1 ,len(midi) ), font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
    if sf2used[sf2counter]==1:
-      draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+      draw.text((9, t_size_l_y+t_size_m_y+1),"            ♪", font=fontm, fill=(55, 255, 255))
    if playflag[midicounter]==1:
-      draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
+      draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
    disp.display(img)
 
 def mode2_default_disp():
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))
-   draw.text((cur_size_x+x, 0),"設定",  font=fontl, fill=(255, 255, 55))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"WiFi:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),"Audio:",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"USBメモリ",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),"Ysynth4アップデート",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*5+1),"再起動", font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*6+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
-   draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*7+1),"リロード",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, 0),"設定",  font=fontl, fill=(255, 255, 55))
+   draw.text((9, t_size_l_y+t_size_m_y+1),"WiFi:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*2+1),"Audio:",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*3+1),"USBメモリ",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*4+1),"Ysynth4アップデート",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*5+1),"再起動", font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*6+1),"シャットダウン",  font=fontm, fill=(55, 255, 255))
+   draw.text((9, t_size_l_y+t_size_m_y*7+1),"リロード",  font=fontm, fill=(55, 255, 255))
    draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),wifi_ssid,  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*2+1),audio_card,  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fonts, fill=(0, 255, 0))
@@ -528,22 +525,22 @@ while True:
              if sf2counter == -1:
                 sf2counter =  len(sf2) -1
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-             draw.rectangle((cur_size_x+x, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
-             draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y+1),"{0:03d}".format(sf2counter + 1), font=fontm, fill=(55, 255, 255))
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
+             draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+             draw.text((9+t_size_m_x*4, t_size_l_y+t_size_m_y+1),"{0:03d}/{1:03d}" .format(sf2counter + 1 ,len(sf2)), font=fontm, fill=(55, 255, 255))
+             draw.text((9, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
-                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+                 draw.text((9, t_size_l_y+t_size_m_y+1),"            ♪", font=fontm, fill=(55, 255, 255))
              disp.display(img)
           if mode1_coordi ==1:
              midicounter -= 1
              if midicounter == -1:
                 midicounter =  len(midi)-1
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-             draw.rectangle((cur_size_x+x, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
-             draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}".format(midicounter + 1),  font=fontm, fill=(55, 255, 255))
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
+             draw.rectangle((9, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
+             draw.text((9+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}/{1:03d}".format(midicounter + 1 ,len(midi) ), font=fontm, fill=(55, 255, 255))
+             draw.text((9, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
              if playflag[midicounter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
        longpush_(input_LEFT)
 
@@ -651,22 +648,22 @@ while True:
              if sf2counter == len(sf2):
                 sf2counter = 0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-             draw.rectangle((cur_size_x+x, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
-             draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y+1),"{0:03d}".format(sf2counter + 1), font=fontm, fill=(55, 255, 255))
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
+             draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+             draw.text((9+t_size_m_x*4, t_size_l_y+t_size_m_y+1),"{0:03d}/{1:03d}" .format(sf2counter + 1 ,len(sf2)), font=fontm, fill=(55, 255, 255))
+             draw.text((9, t_size_l_y+t_size_m_y*2+1),sf2[sf2counter], font=fontm, fill=(255, 255, 55))
              if sf2used[sf2counter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y+1),"            ♪", font=fontm, fill=(55, 255, 255))
              disp.display(img)
           if mode1_coordi ==1:
              midicounter += 1
              if midicounter == len(midi):
                 midicounter = 0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-             draw.rectangle((cur_size_x+x, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
-             draw.text((cur_size_x+x+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}".format(midicounter + 1),  font=fontm, fill=(55, 255, 255))
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))  
+             draw.rectangle((9, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
+             draw.text((9+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}/{1:03d}".format(midicounter + 1 ,len(midi) ), font=fontm, fill=(55, 255, 255))
+             draw.text((9, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))  
              if playflag[midicounter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img) 
        longpush_(input_RIGHT)
 
@@ -730,10 +727,10 @@ while True:
           if mode==1:
              mode1_default_disp()
              if sf2used[sf2counter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y+1),"            ♪", font=fontm, fill=(55, 255, 255))
                 disp.display(img)
              if playflag[midicounter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
                 disp.display(img)
           if mode==2:      
              mode2_default_disp()
@@ -748,10 +745,10 @@ while True:
           if mode==1:
              mode1_default_disp()
              if sf2used[sf2counter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y+1),"            ♪", font=fontm, fill=(55, 255, 255))
                 disp.display(img)
              if playflag[midicounter]==1:
-                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+                draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
                 disp.display(img)
           if mode==2:      
              mode2_default_disp()
@@ -800,18 +797,16 @@ while True:
           sf2used[sf2counter]=1
           draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
           draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-          draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        Wait...", font=fontm, fill=(55, 255, 255))
+          draw.text((9, t_size_l_y+t_size_m_y+1),"        Wait...", font=fontm, fill=(55, 255, 255))
           disp.display(img)
           subprocess.call('sudo killall timidity', shell=True)
           subprocess.call('sudo killall aplaymidi', shell=True)
           playflag = [0]*len(midi)
-          sf2 = [s.replace(' ', '\ ') for s in sf2]
-          subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
-          sf2 = [s.replace('\ ', ' ') for s in sf2]
+          subprocess.Popen('sudo timidity -c "/media/usb0/timidity_cfg/{}.cfg"' .format(sf2[sf2counter]), shell=True)
           time.sleep(2)
           subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
           draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-          draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        OK!", font=fontm, fill=(55, 255, 255))
+          draw.text((9, t_size_l_y+t_size_m_y+1),"        OK!", font=fontm, fill=(55, 255, 255))
           disp.display(img)
           time.sleep(2)
           mode1_default_disp()
@@ -822,12 +817,10 @@ while True:
              playflag = [0]*len(midi)
              playflag[midicounter]=1
              draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+             draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
              subprocess.call('sudo killall aplaymidi', shell=True)
              allnoteoff()
-             midi = [s.replace(' ', '\ ') for s in midi]
-             aplaymidi = subprocess.Popen('aplaymidi -p 14:0 /media/usb0/midi/{}.mid' .format(midi[midicounter]), shell=True)
-             midi = [s.replace('\ ', ' ') for s in midi]
+             aplaymidi = subprocess.Popen('aplaymidi -p 14:0 "/media/usb0/midi/{}.mid"' .format(midi[midicounter]), shell=True)
              disp.display(img)
              mode1_default_disp()
              while (GPIO.input(input_OK)) == 0: 
@@ -925,14 +918,11 @@ while True:
                cfg = [ ]
               if (sf2 != cfg) and (sf2[0] != "sf2_None"):
                list_difference = list(set(cfg) - set(sf2))
-               list_difference = [l.replace(' ', '\ ') for l in list_difference]
                for x in range(len(list_difference)):
                 subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
                list_difference = list(set(sf2) - set(cfg))
-               list_difference = [l.replace(' ', '\ ') for l in list_difference]
                for x in range(len(list_difference)):
-                subprocess.call("sudo /home/pi/ysynth4/cfgforsf -C /media/usb0/sf2/{sf2name}.sf2 | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > /media/usb0/timidity_cfg/{sf2name}.cfg" .format(sf2name=list_difference[x])  ,shell=True)
-                subprocess.call('sudo chown -R pi:pi /media/usb0/timidity_cfg' ,shell=True)
+                subprocess.call('''sudo "/home/pi/ysynth4/cfgforsf -C /media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
               if sf2[0] == "sf2_None":
                  subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
               time.sleep(2)
@@ -948,25 +938,16 @@ while True:
              if dialog_coordi==0:
               subprocess.call('sudo killall timidity', shell=True)
               subprocess.call('sudo killall aplaymidi', shell=True)
-              try:
-               midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
-               playflag = [0]*len(midi)
-              except:
-               midi= ["midi_None"]
-               midicounter=0
-              try:
-               sf2 = subprocess.check_output('ls -v /media/usb0/sf2/*.sf2' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').split('\n')
-               sf2used = [0]*len(sf2)
-              except:
-               sf2 = ["sf2_None"]
-               sf2counter = 0
-              try:
-               cfg = subprocess.check_output('ls -v /media/usb0/timidity_cfg/*.cfg' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').split('\n')
-              except:
-               cfg = [ ]
+              midi= ["midi_None"]
+              midicounter=0
+              playflag = [0]
+              sf2 = ["sf2_None"]
+              sf2counter = 0
+              sf2used = [0]
+              cfg = [ ]
               dialog_coordi=1
-              time.sleep(2)
-              mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
+              while mountcheck == str("/media/usb0"):  
+                    mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
               mode2_default_disp()
 
        if mode==2 and mode2_coordi ==3:
