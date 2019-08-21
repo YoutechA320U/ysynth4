@@ -127,6 +127,9 @@ def boot_disp():
     time.sleep(0.01)
     disp.display(img)
 boot_disp()
+draw.rectangle((0, 0, 160, 128), (0,0,0))
+time.sleep(2)
+disp.display(img)
 
 subprocess.call('sudo killall ttymidi', shell=True)
 subprocess.call('sudo killall timidity', shell=True)
