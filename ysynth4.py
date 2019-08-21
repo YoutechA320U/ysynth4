@@ -42,8 +42,6 @@ draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 volume = 70
 mode = 0
-CC2 = 0
-CC1 = 0
 
 midiCH = 0
 midiPROG=  [0]*16
@@ -109,15 +107,16 @@ if (sf2 != cfg) and (sf2[0] != "sf2_None"):
  list_difference = [l.replace(' ', '\ ') for l in list_difference]
  for x in range(len(list_difference)):
   subprocess.call("sudo /home/pi/ysynth4/cfgforsf -C /media/usb0/sf2/{sf2name}.sf2 | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > /media/usb0/timidity_cfg/{sf2name}.cfg" .format(sf2name=list_difference[x])  ,shell=True)
-  print(list_difference[x])
  subprocess.call('sudo chown -R pi:pi /media/usb0/timidity_cfg' ,shell=True)
 if sf2[0] == "sf2_None":
    subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
 
+mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
+
 def boot_disp():
+   global mountcheck
    for x in range(69):
     draw.rectangle((0, 0, 160, 128), (0,0,0))
-    mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
     if mountcheck == str("/media/usb0"):
        draw.text((35, 1+x-32),"Ysynth4",  font=fontll, fill=(55, 255, 255))
     if mountcheck != str("/media/usb0"):
@@ -251,36 +250,9 @@ def dialog_window0():
    draw.text((98,90),"いいえ",  font=fonts, fill=(0, 0, 0))
    disp.display(img)
    
-def longpush_LEFT():
+def longpush_(button):
     global longpush
-    while (GPIO.input(input_LEFT) == 0 and longpush !=100): 
-          time.sleep(0.01)
-          longpush +=1
-          if longpush==100:
-             break
-          else:
-             continue
-def longpush_RIGHT():
-    global longpush
-    while (GPIO.input(input_RIGHT) == 0 and longpush !=100): 
-          time.sleep(0.01)
-          longpush +=1
-          if longpush==100:
-             break
-          else:
-             continue
-def longpush_UP():
-    global longpush
-    while (GPIO.input(input_UP) == 0 and longpush !=100): 
-          time.sleep(0.01)
-          longpush +=1
-          if longpush==100:
-             break
-          else:
-             continue
-def longpush_DOWN():
-    global longpush
-    while (GPIO.input(input_DOWN) == 0 and longpush !=100): 
+    while (GPIO.input(button) == 0 and longpush !=100): 
           time.sleep(0.01)
           longpush +=1
           if longpush==100:
@@ -317,7 +289,7 @@ def dialog_loop0(txt, cmd):
              dialog_coordi=1
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))   
           disp.display(img)
-          longpush_LEFT()
+          longpush_(input_LEFT)
        if GPIO.input(input_OK) == 0:
           time.sleep(0.05)
           if dialog_coordi==0:
@@ -573,7 +545,7 @@ while True:
              if playflag[midicounter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
-       longpush_LEFT()
+       longpush_(input_LEFT)
 
     if GPIO.input(input_RIGHT) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.00001)
@@ -696,7 +668,7 @@ while True:
              if playflag[midicounter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img) 
-       longpush_RIGHT()
+       longpush_(input_RIGHT)
 
     if GPIO.input(input_UP) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)
@@ -721,7 +693,7 @@ while True:
              mode2_coordi=6
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
-       longpush_UP()
+       longpush_(input_UP)
 
     if GPIO.input(input_DOWN) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)
@@ -746,7 +718,7 @@ while True:
              mode2_coordi=0
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
-       longpush_DOWN()
+       longpush_(input_DOWN)
     if GPIO.input(input_MODE) == 0:  
        time.sleep(0.01)
        if GPIO.input(input_RIGHT) == 0:
@@ -765,7 +737,7 @@ while True:
                 disp.display(img)
           if mode==2:      
              mode2_default_disp()
-       longpush_RIGHT()
+       longpush_(input_RIGHT)
 
        if GPIO.input(input_LEFT) == 0:
           mode -=1
@@ -801,7 +773,7 @@ while True:
           draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
           draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
           disp.display(img)
-          longpush_UP()
+          longpush_(input_UP)
        if GPIO.input(input_DOWN) == 0:
           time.sleep(0.01)
           volume -=1
@@ -811,7 +783,7 @@ while True:
           draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
           draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
           disp.display(img)
-          longpush_DOWN()  
+          longpush_(input_DOWN)  
              
        #while (GPIO.input(input_MODE)) == 0: 
           #continue 
@@ -1032,7 +1004,6 @@ while True:
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
           dialog_loop0("    再起動します...", "sudo reboot")
-
 
        if mode==2 and mode2_coordi ==5:
           time.sleep(0.05)
