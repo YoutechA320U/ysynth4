@@ -122,7 +122,7 @@ def boot_disp():
        draw.text((35, 1+x-32),"Ysynth4",  font=fontll, fill=(55, 255, 255))
     if mountcheck != str("/media/usb0"):
        draw.rectangle((40, 1+x-32, 120, 1+x-10),outline=(100,100,100), fill=(55, 255, 255))
-    draw.text((35, 100),"v0.2/2019/08/20", font=fonts, fill=(55, 255, 255))
+    draw.text((35, 100),"v0.5/2019/08/21", font=fonts, fill=(55, 255, 255))
     draw.text((40, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
     time.sleep(0.01)
     disp.display(img)
@@ -247,6 +247,43 @@ def dialog_window0():
    draw.text((34,90),"はい",  font=fonts, fill=(0, 0, 0))
    draw.text((98,90),"いいえ",  font=fonts, fill=(0, 0, 0))
    disp.display(img)
+   
+def longpush_LEFT():
+    global longpush
+    while (GPIO.input(input_LEFT) == 0 and longpush !=100): 
+          time.sleep(0.01)
+          longpush +=1
+          if longpush==100:
+             break
+          else:
+             continue
+def longpush_RIGHT():
+    global longpush
+    while (GPIO.input(input_RIGHT) == 0 and longpush !=100): 
+          time.sleep(0.01)
+          longpush +=1
+          if longpush==100:
+             break
+          else:
+             continue
+def longpush_UP():
+    global longpush
+    while (GPIO.input(input_UP) == 0 and longpush !=100): 
+          time.sleep(0.01)
+          longpush +=1
+          if longpush==100:
+             break
+          else:
+             continue
+def longpush_DOWN():
+    global longpush
+    while (GPIO.input(input_DOWN) == 0 and longpush !=100): 
+          time.sleep(0.01)
+          longpush +=1
+          if longpush==100:
+             break
+          else:
+             continue
 
 def dialog_loop0(txt, cmd):
     global dialog_coordi, dialog_coordi_xl, dialog_coordi_yl, dialog_open
@@ -277,13 +314,7 @@ def dialog_loop0(txt, cmd):
              dialog_coordi=1
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))   
           disp.display(img)
-          while (GPIO.input(input_LEFT) == 0 and longpush !=100): 
-                time.sleep(0.01)
-                longpush +=1
-                if longpush==100:
-                   break
-                else:
-                   continue
+          longpush_LEFT()
        if GPIO.input(input_OK) == 0:
           time.sleep(0.05)
           if dialog_coordi==0:
@@ -302,15 +333,11 @@ def dialog_loop0(txt, cmd):
              mode2_default_disp()
        if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT))== 1:  
           longpush=0 
+
 ##初期設定ここまで##
-time.sleep(2)
+time.sleep(1)
 msg = None
-#subprocess.Popen('sudo timidity -c /media/usb0/timidity_cfg/{}.cfg' .format(sf2[sf2counter]), shell=True)
-#time.sleep(2)
-#subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
-
 mode0_default_disp()
-
 while True:
     try:
      if aplaymidi.poll() is not None:
@@ -322,10 +349,8 @@ while True:
      pass
 
     msg = midiin.get_message()
-    #print(msg)
     if msg is None:
        message, deltatime = 0,0
-    #print(message)
 ##MIDI入力をディスプレイに反映する処理
     if msg is not None:
        message, deltatime = msg
@@ -421,8 +446,9 @@ while True:
                  draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
                  draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[forlch]+pb1[forlch]-8192)), font=fontm, fill=(255, 255, 55))
                  disp.display(img)
+##MIDI入力をディスプレイに反映する処理ここまで
 
-    if GPIO.input(input_LEFT) == 0: 
+    if GPIO.input(input_LEFT) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.00001)
        if mode==0:
           if mode0_coordi ==0:
@@ -544,16 +570,9 @@ while True:
              if playflag[midicounter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img)
+       longpush_LEFT()
 
-
-       while (GPIO.input(input_LEFT) == 0 and longpush !=100): 
-             time.sleep(0.01)
-             longpush +=1
-             if longpush==100:
-                break
-             else:
-                continue
-    if GPIO.input(input_RIGHT) == 0: 
+    if GPIO.input(input_RIGHT) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.00001)
        if mode==0:
           if mode0_coordi ==0:
@@ -674,15 +693,9 @@ while True:
              if playflag[midicounter]==1:
                 draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
              disp.display(img) 
+       longpush_RIGHT()
 
-       while (GPIO.input(input_RIGHT) == 0 and longpush !=100): 
-             time.sleep(0.01)
-             longpush +=1
-             if longpush==100:
-                break
-             else:
-                continue
-    if GPIO.input(input_UP) == 0: 
+    if GPIO.input(input_UP) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)
        if mode==0 and GPIO.input(input_OK) != 0:
           draw.rectangle((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi],mode0_coordi_xl[mode0_coordi]+cur_size_x, mode0_coordi_yl[mode0_coordi]+cur_size_y), (0,0,0))
@@ -705,15 +718,9 @@ while True:
              mode2_coordi=6
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
-       while (GPIO.input(input_UP) == 0 and longpush !=100): 
-             time.sleep(0.01)
-             longpush +=1
-             if longpush==100:
-                break
-             else:
-               continue   
+       longpush_UP()
 
-    if GPIO.input(input_DOWN) == 0: 
+    if GPIO.input(input_DOWN) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)
        if mode==0 and GPIO.input(input_OK) != 0:
           draw.rectangle((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi],mode0_coordi_xl[mode0_coordi]+cur_size_x, mode0_coordi_yl[mode0_coordi]+cur_size_y), (0,0,0))
@@ -736,38 +743,82 @@ while True:
              mode2_coordi=0
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
-       while (GPIO.input(input_DOWN) == 0 and longpush !=100): 
+       longpush_DOWN()
+    if GPIO.input(input_MODE) == 0:  
+       time.sleep(0.01)
+       if GPIO.input(input_RIGHT) == 0:
+          mode +=1
+          if mode >2:
+             mode=0
+          if mode==0:
+             mode0_default_disp()
+          if mode==1:
+             mode1_default_disp()
+             if sf2used[sf2counter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+                disp.display(img)
+             if playflag[midicounter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+                disp.display(img)
+          if mode==2:      
+             mode2_default_disp()
+       longpush_RIGHT()
+
+       if GPIO.input(input_LEFT) == 0:
+          mode -=1
+          if mode <0:
+             mode=2
+          if mode==0:
+             mode0_default_disp()
+          if mode==1:
+             mode1_default_disp()
+             if sf2used[sf2counter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
+                disp.display(img)
+             if playflag[midicounter]==1:
+                draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
+                disp.display(img)
+          if mode==2:      
+             mode2_default_disp()
+
+       while GPIO.input(input_LEFT) == 0 and longpush !=100: 
              time.sleep(0.01)
              longpush +=1
              if longpush==100:
                 break
              else:
-               continue
-    if GPIO.input(input_MODE) == 0:  
-       time.sleep(0.1)
-       mode +=1
-       if mode>2:
-          mode=0
-          if wifi_ssid !="OFF":
-             wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
-          if wifi_ssid=="off/any":
-             wifi_ssid="接続していません" 
-          mode0_default_disp()
-       if mode==1:
-          mode1_default_disp()
-          if sf2used[sf2counter]==1:
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y+1),"        ♪", font=fontm, fill=(55, 255, 255))
-             disp.display(img)
-          if playflag[midicounter]==1:
-             draw.text((cur_size_x+x, t_size_l_y+t_size_m_y*3+1),"        ▶", font=fontm, fill=(55, 255, 255))
-             disp.display(img)
-       if mode==2:      
-          mode2_default_disp()
-       while (GPIO.input(input_MODE)) == 0: 
-          continue 
+                continue
 
-    if GPIO.input(input_OK) == 0: 
+       if GPIO.input(input_UP) == 0:
+          time.sleep(0.01)
+          volume +=1
+          if volume>100:
+             volume=0
+          subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
+          draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
+          draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
+          disp.display(img)
+          longpush_UP()
+       if GPIO.input(input_DOWN) == 0:
+          time.sleep(0.01)
+          volume -=1
+          if volume<0:
+             volume=100
+          subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
+          draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
+          draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
+          disp.display(img)
+          longpush_DOWN()  
+             
+       #while (GPIO.input(input_MODE)) == 0: 
+          #continue 
+
+    if GPIO.input(input_OK) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)        
+       if mode==0:
+          allnoteoff()
+          while (GPIO.input(input_OK)) == 0: 
+               continue 
        if mode==1 and mode1_coordi ==0 and sf2used[sf2counter]==0 and sf2[0] != "sf2_None":  
           time.sleep(0.05)
           sf2used = [0]*len(sf2)
@@ -909,6 +960,7 @@ while True:
                 subprocess.call('sudo chown -R pi:pi /media/usb0/timidity_cfg' ,shell=True)
               if sf2[0] == "sf2_None":
                  subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
+              time.sleep(2)
               dialog_coordi=1
               mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
               mode2_default_disp()
@@ -941,7 +993,6 @@ while True:
               time.sleep(2)
               mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
               mode2_default_disp()
-
 
        if mode==2 and mode2_coordi ==3:
           time.sleep(0.05)
@@ -997,41 +1048,8 @@ while True:
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
           dialog_loop0("    リロードします...", "sudo systemctl restart ysynth4.service")        
-       if GPIO.input(input_UP) == 0:
-          time.sleep(0.01)
-          volume +=1
-          if volume>100:
-             volume=0
-          subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
-          draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
-          draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
-          disp.display(img)
-          while GPIO.input(input_UP) == 0 and longpush !=100: 
-                time.sleep(0.01)
-                longpush +=1
-                if longpush==100:
-                   break
-                else:
-                  continue
-       if GPIO.input(input_DOWN) == 0:
-          time.sleep(0.01)
-          volume -=1
-          if volume<0:
-             volume=100
-          subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
-          draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
-          draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
-          disp.display(img)
-          while GPIO.input(input_DOWN) == 0 and longpush !=100: 
-                time.sleep(0.01)
-                longpush +=1
-                if longpush==100:
-                   break
-                else:
-                  continue     
-             
+
     if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
        longpush=0 
     if msg is None:         
        time.sleep(0.00001)  
-##MIDI入力をディスプレイに反映する処理ここまで
