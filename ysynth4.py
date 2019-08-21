@@ -25,13 +25,11 @@ disp = ST7735.ST7735(
     spi_speed_hz=40000000
 )
 
-
 # Initialize display.
 disp.begin()
 
 width = disp.width
 height = disp.height
-
 
 #img = Image.new('1', (160, height))
 img = Image.new('RGB', (width, height), color=(0, 0, 0))
@@ -795,9 +793,9 @@ while True:
           time.sleep(0.05)
           sf2used = [0]*len(sf2)
           sf2used[sf2counter]=1
-          draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-          draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-          draw.text((9, t_size_l_y+t_size_m_y+1),"        Wait...", font=fontm, fill=(55, 255, 255))
+          draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+          draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+          draw.text((9, t_size_l_y+t_size_m_y+1),"            Wait...", font=fontm, fill=(55, 255, 255))
           disp.display(img)
           subprocess.call('sudo killall timidity', shell=True)
           subprocess.call('sudo killall aplaymidi', shell=True)
@@ -805,8 +803,8 @@ while True:
           subprocess.Popen('sudo timidity -c "/media/usb0/timidity_cfg/{}.cfg"' .format(sf2[sf2counter]), shell=True)
           time.sleep(2)
           subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
-          draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-          draw.text((9, t_size_l_y+t_size_m_y+1),"        OK!", font=fontm, fill=(55, 255, 255))
+          draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+          draw.text((9, t_size_l_y+t_size_m_y+1),"            OK!", font=fontm, fill=(55, 255, 255))
           disp.display(img)
           time.sleep(2)
           mode1_default_disp()
