@@ -25,11 +25,13 @@ disp = ST7735.ST7735(
     spi_speed_hz=40000000
 )
 
+
 # Initialize display.
 disp.begin()
 
 width = disp.width
 height = disp.height
+
 
 #img = Image.new('1', (160, height))
 img = Image.new('RGB', (width, height), color=(0, 0, 0))
@@ -114,9 +116,11 @@ def boot_disp():
     draw.rectangle((0, 0, 160, 128), (0,0,0))
     if mountcheck == str("/media/usb0"):
        draw.text((35, 1+x-32),"Ysynth4",  font=fontll, fill=(55, 255, 255))
+       #draw.text((35, 1+x-32),"         ®",  font=fontl, fill=(55, 255, 255))
     if mountcheck != str("/media/usb0"):
        draw.rectangle((40, 1+x-32, 120, 1+x-10),outline=(100,100,100), fill=(55, 255, 255))
-    draw.text((35, 100),"v0.5/2019/08/21", font=fonts, fill=(55, 255, 255))
+       #draw.text((35, 1+x-32),"         ®",  font=fontl, fill=(55, 255, 255))
+    draw.text((35, 100),"v0.6/2019/08/22", font=fonts, fill=(55, 255, 255))
     draw.text((40, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
     time.sleep(0.01)
     disp.display(img)
@@ -312,7 +316,7 @@ while True:
     try:
      if aplaymidi.poll() is not None:
         if mode == 1 and playflag[midicounter] == 1:
-           draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+           draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
            disp.display(img)
         playflag = [0]*len(midi)
     except:
@@ -814,7 +818,7 @@ while True:
              time.sleep(0.05)
              playflag = [0]*len(midi)
              playflag[midicounter]=1
-             draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+             draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
              draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
              subprocess.call('sudo killall aplaymidi', shell=True)
              allnoteoff()
@@ -827,7 +831,7 @@ while True:
           if GPIO.input(input_OK) == 0 and playflag[midicounter]==1:
              time.sleep(0.05)
              playflag = [0]*len(midi)
-             draw.rectangle((t_size_m_x*9, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+             draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
              allnoteoff()
              subprocess.call('sudo killall aplaymidi', shell=True)
              allnoteoff()
