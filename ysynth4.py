@@ -150,6 +150,7 @@ if wifi_ssid=="off/any":
 #wifi_ssid="**********"
 audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', '').replace(',', ''))
 mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
+subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
 
 x = 3
 y = 0
