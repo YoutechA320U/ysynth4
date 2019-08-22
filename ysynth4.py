@@ -101,7 +101,7 @@ except:
 if (sf2 != cfg) and (sf2[0] != "sf2_None"):
  list_difference = list(set(cfg) - set(sf2))
  for x in range(len(list_difference)):
-  subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
+  subprocess.call('sudo rm "/media/usb0/timidity_cfg/{}.cfg"' .format(list_difference[x])  ,shell=True)
  list_difference = list(set(sf2) - set(cfg))
  for x in range(len(list_difference)):
   subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
@@ -926,7 +926,7 @@ while True:
                for x in range(len(list_difference)):
                 subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
               if sf2[0] == "sf2_None":
-                 subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
+                 subprocess.call('sudo rm "/home/pi/timidity_cfg/*.cfg"' ,shell=True)
               time.sleep(2)
               dialog_coordi=1
               mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
