@@ -810,6 +810,16 @@ while True:
           draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
           draw.text((9, t_size_l_y+t_size_m_y+1),"            OK!", font=fontm, fill=(55, 255, 255))
           disp.display(img)
+          midiPROG=  [0]*16
+          midiCC7=  [100]*16
+          midiCC11=  [127]*16
+          midiCC10=  [64]*16
+          midiCC1=  [0]*16
+          midiCC91=  [40]*16
+          midiCC93=  [0]*16
+          midiCC94=  [0]*16
+          pb1 = [0]*16
+          pb2 = [0x40]*16
           time.sleep(2)
           mode1_default_disp()
 
