@@ -25,19 +25,15 @@ disp = ST7735.ST7735(
     spi_speed_hz=40000000
 )
 
-
 # Initialize display.
 disp.begin()
 
 width = disp.width
 height = disp.height
 
-
-#img = Image.new('1', (160, height))
 img = Image.new('RGB', (width, height), color=(0, 0, 0))
 
 draw = ImageDraw.Draw(img)
-#draw.rectangle((0,0,160, height), outline=0, fill=0)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 volume = 70
