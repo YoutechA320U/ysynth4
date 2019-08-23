@@ -981,7 +981,7 @@ while True:
              time.sleep(2)
              mode2_default_disp()
           if latest_dl ==0:
-             download_v=float(subprocess.check_output("sudo cat /home/pi/ysynth4/ysynth4.py.1|grep version=|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
+             download_v=float(subprocess.check_output("sudo cat /home/pi/ysynth4/ysynth4.py.1|grep -m1 version=|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
              if download_v > version:
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
                 draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
