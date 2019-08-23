@@ -982,9 +982,6 @@ while True:
              mode2_default_disp()
           if latest_dl ==0:
              download_v=float(subprocess.check_output("cat ysynth4/ysynth4.py.1|grep version=|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
-             print(version)
-             print(download_v)
-             print(download_v-version)
              if download_v > version:
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
                 draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
