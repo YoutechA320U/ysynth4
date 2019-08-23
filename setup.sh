@@ -6,8 +6,13 @@ sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0 
 sudo raspi-config nonint do_uart 0
+sudo sed -i -e '/dtparam=i2s=on/d' /boot/config.txt
 sudo sed -i -e '$ a dtparam=i2s=on' /boot/config.txt
 sudo sed -i -e '/#dtparam=i2s=on/d' /boot/config.txt
+sudo sed -i -e '/core_freq=250/d' /boot/config.txt
+sudo sed -i -e '$ a core_freq=250' /boot/config.txt
+sudo sed -i -e '/dtoverlay=pi3-miniuart-bt/d' /boot/config.txt
+sudo sed -i -e '/dtoverlay=midi-uart0/d' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=pi3-miniuart-bt' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=midi-uart0' /boot/config.txt
 sudo sed -i -e 's/console=serial0,115200//' /boot/cmdline.txt
