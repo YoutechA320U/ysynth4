@@ -887,7 +887,7 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*3+1),"か?(再起動します)",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("  再起動します...", "")
+             dialog_loop0("    再起動します...", "")
              if dialog_coordi==0:
                 subprocess.call("sudo sed -i -e '$ a dtparam=audio=on' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtoverlay=iqaudio-dacplus/d' /boot/config.txt" ,shell=True)
@@ -898,7 +898,7 @@ while True:
              draw.text((11, t_size_l_y+t_size_m_y*3+1),"すか?(再起動します)",  font=fonts, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
              disp.display(img)
-             dialog_loop0("  再起動します...", "")
+             dialog_loop0("    再起動します...", "")
              if dialog_coordi==0:
                 subprocess.call("sudo sed -i -e '$ a dtoverlay=iqaudio-dacplus' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtparam=audio=on/d' /boot/config.txt" ,shell=True)
