@@ -78,6 +78,9 @@ fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.t
 fontll = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 24, encoding='unic')
 
 subprocess.call('sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0' ,shell=True)
+subprocess.call('sudo mkdir /media/usb0/midi' ,shell=True)
+subprocess.call('sudo mkdir /media/usb0/sf2' ,shell=True)
+subprocess.call('sudo mkdir /media/usb0/timidity_cfg' ,shell=True)
 try:
   midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
   playflag = [0]*len(midi)
