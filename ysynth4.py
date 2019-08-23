@@ -79,19 +79,19 @@ fontll = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.
 
 subprocess.call('sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0' ,shell=True)
 try:
-  midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
+  midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid /media/usb0/midi/*.MID' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').replace('.MID', '').split('\n')
   playflag = [0]*len(midi)
 except:
  midi= ["midi_None"]
  midicounter=0
 try:
- sf2 = subprocess.check_output('ls -v /media/usb0/sf2/*.sf2' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').split('\n')
+ sf2 = subprocess.check_output('ls -v /media/usb0/sf2/*.sf2 /media/usb0/sf2/*.SF2' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').replace('.SF2', '').split('\n')
  sf2used = [0]*len(sf2)
 except:
  sf2 = ["sf2_None"]
  sf2counter = 0
 try:
- cfg = subprocess.check_output('ls -v /media/usb0/timidity_cfg/*.cfg' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').split('\n')
+ cfg = subprocess.check_output('ls -v /media/usb0/timidity_cfg/*.cfg /media/usb0/timidity_cfg/*.CFG' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').replace('.CFG', '').split('\n')
 except:
  cfg = [ ]
 if (sf2 != cfg) and (sf2[0] != "sf2_None"):
