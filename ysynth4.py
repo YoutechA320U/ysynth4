@@ -1001,7 +1001,7 @@ while True:
                 subprocess.call("sudo rm /home/pi/ysynth4/ysynth4.py.1" , shell=True)
                 disp.display(img)
                 dialog_coordi=1
-                time.sleep(2)
+                time.sleep(3)
                 mode2_default_disp()
        
        if mode==2 and mode2_coordi ==4:
