@@ -45,5 +45,6 @@ sudo sh -c "echo '[Unit]\nDescription = ysynth4\n[Service]\nExecStart = /usr/bin
 sudo systemctl enable ysynth4.service
 sudo systemctl start ysynth4.service
 sudo mv /home/pi/ysynth4/90-usbmidiconnect.rules /etc/udev/rules.d/
+sudo sed -i -e '$ a allow-hotplug wlan0\n /etc/network/interfacesiface wlan0 inet manual\n    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf' /etc/network/interfaces
 sudo sed -i -e '$ a FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,codepage=932,uid=pi,gid=pi,dmask=000,fmask=011"' /etc/usbmount/usbmount.conf
 sudo reboot
