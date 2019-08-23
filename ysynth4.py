@@ -90,7 +90,7 @@ def boot_disp():
     if mountcheck != str("/media/usb0"):
        draw.rectangle((40, 1+x-32, 120, 1+x-10),outline=(100,100,100), fill=(55, 255, 255))
        #draw.text((35, 1+x-32),"         ®",  font=fontl, fill=(55, 255, 255))
-    draw.text((35, 100),"v1.0/2019/08/23", font=fonts, fill=(55, 255, 255))
+    draw.text((35, 100),"v1.1/2019/08/23", font=fonts, fill=(55, 255, 255))
     draw.text((40, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
     time.sleep(0.01)
     disp.display(img)
@@ -103,22 +103,17 @@ if mountcheck == str("/media/usb0"):
    if fluidcheck != str("/media/usb0/sf2/FluidR3_GM.sf2"): 
       subprocess.call('sudo cp /usr/share/sounds/sf2/FluidR3_GM.sf2 media/usb0/sf2/' ,shell=True)
 
-try:
-  midi = subprocess.check_output('find /media/usb0/midi/ \( -name \*.mid -o -name \*.MId \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').replace('.MID', '').split('\n')
-  playflag = [0]*len(midi)
-except:
- midi= ["midi_None"]
- midicounter=0
-try:
- sf2 = subprocess.check_output('find /media/usb0/sf2/ \( -name \*.sf2 -o -name \*.SF2 \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').replace('.SF2', '').split('\n')
- sf2used = [0]*len(sf2)
-except:
- sf2 = ["sf2_None"]
- sf2counter = 0
-try:
- cfg = subprocess.check_output('find /media/usb0/timidity_cfg/ \( -name \*.cfg -o -name \*.CFG \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').replace('.CFG', '').split('\n')
-except:
- cfg = [ ]
+midi = subprocess.check_output('find /media/usb0/midi/ \( -name \*.mid -o -name \*.MId \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').replace('.MID', '').split('\n')
+playflag = [0]*len(midi)
+if midi[0]=='':
+   midi= ["midi_None"]
+   midicounter=0
+sf2 = subprocess.check_output('find /media/usb0/sf2/ \( -name \*.sf2 -o -name \*.SF2 \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').replace('.SF2', '').split('\n')
+sf2used = [0]*len(sf2)
+if sf2[0]=='':
+   sf2 = ["sf2_None"]
+   sf2counter = 0
+cfg = subprocess.check_output('find /media/usb0/timidity_cfg/ \( -name \*.cfg -o -name \*.CFG \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').replace('.CFG', '').split('\n')
 if (sf2 != cfg) and (sf2[0] != "sf2_None"):
  list_difference = list(set(cfg) - set(sf2))
  for x in range(len(list_difference)):
@@ -917,35 +912,30 @@ while True:
              disp.display(img)
              dialog_loop0("      認識します...", "sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0")
              if dialog_coordi==0:
-              try:
-               midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
-               playflag = [0]*len(midi)
-              except:
-               midi= ["midi_None"]
-               midicounter=0
-              try:
-               sf2 = subprocess.check_output('ls -v /media/usb0/sf2/*.sf2' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').split('\n')
-               sf2used = [0]*len(sf2)
-              except:
-               sf2 = ["sf2_None"]
-               sf2counter = 0
-              try:
-               cfg = subprocess.check_output('ls -v /media/usb0/timidity_cfg/*.cfg' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').split('\n')
-              except:
-               cfg = [ ]
-              if (sf2 != cfg) and (sf2[0] != "sf2_None"):
-               list_difference = list(set(cfg) - set(sf2))
-               for x in range(len(list_difference)):
-                subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
-               list_difference = list(set(sf2) - set(cfg))
-               for x in range(len(list_difference)):
-                subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
-              if sf2[0] == "sf2_None":
-                 subprocess.call('sudo rm "/home/pi/timidity_cfg/*.cfg"' ,shell=True)
-              time.sleep(2)
-              dialog_coordi=1
-              mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
-              mode2_default_disp()
+                midi = subprocess.check_output('find /media/usb0/midi/ \( -name \*.mid -o -name \*.MId \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').replace('.MID', '').split('\n')
+                playflag = [0]*len(midi)
+                if midi[0]=='':
+                   midi= ["midi_None"]
+                   midicounter=0
+                sf2 = subprocess.check_output('find /media/usb0/sf2/ \( -name \*.sf2 -o -name \*.SF2 \) -print' ,shell=True).decode('utf-8').strip().replace('/media/usb0/sf2/', '').replace('.sf2', '').replace('.SF2', '').split('\n')
+                sf2used = [0]*len(sf2)
+                if sf2[0]=='':
+                   sf2 = ["sf2_None"]
+                   sf2counter = 0
+                cfg = subprocess.check_output('ls -v /media/usb0/timidity_cfg/*.cfg' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').split('\n')
+                if (sf2 != cfg) and (sf2[0] != "sf2_None"):
+                   list_difference = list(set(cfg) - set(sf2))
+                for x in range(len(list_difference)):
+                   subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
+                   list_difference = list(set(sf2) - set(cfg))
+                for x in range(len(list_difference)):
+                   subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
+                if sf2[0] == "sf2_None":
+                   subprocess.call('sudo rm "/home/pi/timidity_cfg/*.cfg"' ,shell=True)
+                time.sleep(2)
+                dialog_coordi=1
+                mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
+                mode2_default_disp()
 
           if mountcheck == str("/media/usb0"):          
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fonts, fill=(0, 0, 0))
