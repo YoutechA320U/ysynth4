@@ -78,9 +78,6 @@ fontl = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.t
 fontll = ImageFont.truetype('/usr/share/fonts/truetype/takao-gothic/TakaoGothic.ttf', 24, encoding='unic')
 
 subprocess.call('sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0' ,shell=True)
-subprocess.call('sudo mkdir /media/usb0/midi' ,shell=True)
-subprocess.call('sudo mkdir /media/usb0/sf2' ,shell=True)
-subprocess.call('sudo mkdir /media/usb0/timidity_cfg' ,shell=True)
 try:
   midi = subprocess.check_output('ls -v /media/usb0/midi/*.mid' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').split('\n')
   playflag = [0]*len(midi)
@@ -108,7 +105,13 @@ if sf2[0] == "sf2_None":
    subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
 
 mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
-
+if mountcheck == str("/media/usb0"): 
+   subprocess.call('sudo mkdir /media/usb0/midi' ,shell=True)
+   subprocess.call('sudo mkdir /media/usb0/sf2' ,shell=True)
+   subprocess.call('sudo mkdir /media/usb0/timidity_cfg' ,shell=True)
+   fluidcheck=subprocess.check_output("find /media/usb0/sf2/ -name FluidR3_GM.sf2" ,shell=True).decode('utf-8').strip()
+   if fluidcheck != str("/media/usb0/sf2/FluidR3_GM.sf2"): 
+      subprocess.call('sudo cp /usr/share/sounds/sf2/FluidR3_GM.sf2 media/usb0/' ,shell=True)
 def boot_disp():
    global mountcheck
    for x in range(69):
@@ -119,7 +122,7 @@ def boot_disp():
     if mountcheck != str("/media/usb0"):
        draw.rectangle((40, 1+x-32, 120, 1+x-10),outline=(100,100,100), fill=(55, 255, 255))
        #draw.text((35, 1+x-32),"         ®",  font=fontl, fill=(55, 255, 255))
-    draw.text((35, 100),"v0.7/2019/08/22", font=fonts, fill=(55, 255, 255))
+    draw.text((35, 100),"v1.0/2019/08/23", font=fonts, fill=(55, 255, 255))
     draw.text((40, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
     time.sleep(0.01)
     disp.display(img)
@@ -130,7 +133,7 @@ disp.display(img)
 
 subprocess.call('sudo killall ttymidi', shell=True)
 subprocess.call('sudo killall timidity', shell=True)
-subprocess.Popen('sudo /home/pi/ttymidi -s /dev/ttyAMA0 -b 38400', shell=True)
+subprocess.Popen('sudo /home/pi/ysynth4/ttymidi -s /dev/ttyAMA0 -b 38400', shell=True)
 time.sleep(1)
 midiout = rtmidi.MidiOut()
 midiout.open_virtual_port("Ysynth4_out") # 仮想MIDI出力ポートの名前
