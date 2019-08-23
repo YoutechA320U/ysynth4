@@ -36,6 +36,8 @@ img = Image.new('RGB', (width, height), color=(0, 0, 0))
 draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
+version= 1.1
+day="2019/08/23"
 volume = 70
 mode = 0
 
@@ -90,7 +92,7 @@ def boot_disp():
     if mountcheck != str("/media/usb0"):
        draw.rectangle((40, 1+x-32, 120, 1+x-10),outline=(100,100,100), fill=(55, 255, 255))
        #draw.text((35, 1+x-32),"         ®",  font=fontl, fill=(55, 255, 255))
-    draw.text((35, 100),"v1.1/2019/08/23", font=fonts, fill=(55, 255, 255))
+    draw.text((35, 100),"v{0}/{1}" .format(version,day), font=fonts, fill=(55, 255, 255))
     draw.text((40, 110),"@YoutechA320U",  font=fonts, fill=(55, 255, 255))
     time.sleep(0.01)
     disp.display(img)
@@ -979,15 +981,28 @@ while True:
              time.sleep(2)
              mode2_default_disp()
           if latest_dl ==0:
-             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-             draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
-             subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
-             subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
-             disp.display(img)
-             time.sleep(2)
-             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-             disp.display(img)
-             subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+             download_v=subprocess.check_output("cat ysynth4/ysynth4.py.1|grep version=|awk '{print $2;}'" , shell=True)
+             print(version)
+             print(download_v)
+             print(download_v-version)
+             if download_v-version>0:
+                draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+                draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
+                subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
+                subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
+                disp.display(img)
+                time.sleep(2)
+                draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+                disp.display(img)
+                subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
+             if download_v-version <=0:
+                draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+                draw.text((3,60),"    最新のバージョンです",  font=fonts, fill=(0, 255, 0))
+                subprocess.call("sudo rm /home/pi/ysynth4/ysynth4.py.1" , shell=True)
+                disp.display(img)
+                dialog_coordi=1
+                time.sleep(2)
+                mode2_default_disp()
        
        if mode==2 and mode2_coordi ==4:
           time.sleep(0.05)
