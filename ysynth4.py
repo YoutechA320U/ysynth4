@@ -931,12 +931,12 @@ while True:
                    sf2counter = 0
                 cfg = subprocess.check_output('find /media/usb0/timidity_cfg/ -name \*.cfg|sort' ,shell=True).decode('utf-8').strip().replace('/media/usb0/timidity_cfg/', '').replace('.cfg', '').split('\n')
                 if (sf2 != cfg) and (sf2[0] != "sf2_None"):
-                   list_difference = list(set(cfg) - set(sf2))
-                for x in range(len(list_difference)):
+                 list_difference = list(set(cfg) - set(sf2))
+                 for x in range(len(list_difference)):
                    subprocess.call('sudo rm /media/usb0/timidity_cfg/{}.cfg' .format(list_difference[x])  ,shell=True)
-                   list_difference = list(set(sf2) - set(cfg))
-                for x in range(len(list_difference)):
-                   subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
+                 list_difference = list(set(sf2) - set(cfg))
+                 for x in range(len(list_difference)):
+                  subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
                 if sf2[0] == "sf2_None":
                    subprocess.call('sudo rm "/home/pi/timidity_cfg/*.cfg"' ,shell=True)
                 time.sleep(2)
@@ -982,6 +982,9 @@ while True:
              mode2_default_disp()
           if latest_dl ==0:
              download_v=float(subprocess.check_output("cat ysynth4/ysynth4.py.1|grep version=|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
+             print(version)
+             print(download_v)
+             print(download_v-version)
              if download_v > version:
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
                 draw.text((3,60),"  アップデートします...",  font=fonts, fill=(0, 255, 0))
@@ -998,7 +1001,7 @@ while True:
                 subprocess.call("sudo rm /home/pi/ysynth4/ysynth4.py.1" , shell=True)
                 disp.display(img)
                 dialog_coordi=1
-                time.sleep(3)
+                time.sleep(2)
                 mode2_default_disp()
        
        if mode==2 and mode2_coordi ==4:
