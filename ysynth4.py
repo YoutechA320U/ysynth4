@@ -105,13 +105,7 @@ if sf2[0] == "sf2_None":
    subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
 
 mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
-if mountcheck == str("/media/usb0"): 
-   subprocess.call('sudo mkdir /media/usb0/midi' ,shell=True)
-   subprocess.call('sudo mkdir /media/usb0/sf2' ,shell=True)
-   subprocess.call('sudo mkdir /media/usb0/timidity_cfg' ,shell=True)
-   fluidcheck=subprocess.check_output("find /media/usb0/sf2/ -name FluidR3_GM.sf2" ,shell=True).decode('utf-8').strip()
-   if fluidcheck != str("/media/usb0/sf2/FluidR3_GM.sf2"): 
-      subprocess.call('sudo cp /usr/share/sounds/sf2/FluidR3_GM.sf2 media/usb0/' ,shell=True)
+
 def boot_disp():
    global mountcheck
    for x in range(69):
@@ -127,6 +121,13 @@ def boot_disp():
     time.sleep(0.01)
     disp.display(img)
 boot_disp()
+if mountcheck == str("/media/usb0"): 
+   subprocess.call('sudo mkdir /media/usb0/midi' ,shell=True)
+   subprocess.call('sudo mkdir /media/usb0/sf2' ,shell=True)
+   subprocess.call('sudo mkdir /media/usb0/timidity_cfg' ,shell=True)
+   fluidcheck=subprocess.check_output("find /media/usb0/sf2/ -name FluidR3_GM.sf2" ,shell=True).decode('utf-8').strip()
+   if fluidcheck != str("/media/usb0/sf2/FluidR3_GM.sf2"): 
+      subprocess.call('sudo cp /usr/share/sounds/sf2/FluidR3_GM.sf2 media/usb0/sf2' ,shell=True)
 draw.rectangle((0, 0, 160, 128), (0,0,0))
 time.sleep(2)
 disp.display(img)
