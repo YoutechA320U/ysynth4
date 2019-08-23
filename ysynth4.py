@@ -305,10 +305,10 @@ def dialog_loop0(txt, cmd):
              time.sleep(1)
              dialog_open=0
           if dialog_coordi==1:
-             while (GPIO.input(input_OK)) == 0: 
-                   continue 
              dialog_open=0 
              mode2_default_disp()
+             while (GPIO.input(input_OK)) == 0: 
+                   continue 
        if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT))== 1:  
           longpush=0 
 
