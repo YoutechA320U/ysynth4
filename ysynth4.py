@@ -914,6 +914,9 @@ while True:
              disp.display(img)
              dialog_loop0("      認識します...", "sudo mount -t vfat -o ,iocharset=utf8 /dev/sda1 /media/usb0")
              if dialog_coordi==0:
+                subprocess.call('rename.ul .MID .mid /media/usb0/midi/*' ,shell=True)
+                subprocess.call('rename.ul .SF2 .sf2 /media/usb0/sf2/*' ,shell=True)
+                subprocess.call('rename.ul .CFG .cfg /media/usb0/timidity_cfg/*' ,shell=True)
                 midi = subprocess.check_output('find /media/usb0/midi/ -name \*.mid|sort' ,shell=True).decode('utf-8').strip().replace('/media/usb0/midi/', '').replace('.mid', '').replace('.MID', '').split('\n')
                 playflag = [0]*len(midi)
                 if midi[0]=='':
