@@ -2,17 +2,15 @@
 sudo apt-get -y update 
 sudo apt-get -y upgrade 
 sudo apt-get -y autoremobe
-sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython3.7-dev libjack-jackd2-dev cython3 python3-setuptools i2c-tools python3-smbus python3-rpi.gpio python3-pip timidity fluid-soundfont-gm python3-rpi.gpio python3-spidev python3-pip python3-numpy build-essential libjpeg-dev debhelper fonts-takao-gothic
+sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython3.7-dev libjack-jackd2-dev cython3 python3-setuptools i2c-tools python3-smbus python3-rpi.gpio python3-pip timidity fluid-soundfont-gm python3-rpi.gpio python3-spidev python3-pip python3-numpy build-essential libjpeg-dev debhelper fonts-takao-gothic libopenjp2-7 libtiff5
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0 
 sudo raspi-config nonint do_uart 0
-
 sudo sed -i -e '$ a dtparam=i2s=on' /boot/config.txt
 sudo sed -i -e '/#dtparam=i2s=on/d' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=pi3-miniuart-bt' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=midi-uart0' /boot/config.txt
 sudo sed -i -e 's/console=serial0,115200//' /boot/cmdline.txt
-
 cd /home/pi/ysynth4/
 rm timidity_2.14.0.orig.tar.bz2*
 wget http://deb.debian.org/debian/pool/main/t/timidity/timidity_2.14.0.orig.tar.bz2
@@ -29,7 +27,6 @@ mv cfgforsf /home/pi/ysynth4
 cd /home/pi
 rm /home/pi/ysynth4/TiMidity++-2.14.0/ -fr
 rm /home/pi/ysynth4/timidity_2.14.0.orig.tar.bz2
-
 sudo apt-get install debhelper
 git clone https://github.com/rbrito/usbmount.git
 cd /home/pi/usbmount
@@ -40,3 +37,13 @@ git clone https://github.com/YoutechA320U/ttymidi
 cd /home/pi/ttymidi
 gcc ttymidi.c -o ttymidi -lasound -pthread
 mv ttymidi /home/pi/ysynth4
+sudo pip3 install pillow
+sudo pip3 install st7735
+sudo pip3 install python-rtmidi
+sudo sh -c "echo 'opt iA\nopt Os\nopt --sequencer-ports=1\nopt --realtime-priority=90\nopt B3,8\nopt q0-0\nopt s32kHz\nopt -EFresamp=1\nopt -EFreverb=1\nopt -EFchorus=1\nopt p128a' > /etc/timidity/timidity.cfg"
+sudo sh -c "echo '[Unit]\nDescription = ysynth4\n[Service]\nExecStart = /usr/bin/python3.7 /home/pi/ysynth4/ysynth4.py\nRestart = always\nType = simple\n[Install]\nWantedBy = multi-user.target' > /etc/systemd/system/ysynth4.service"
+sudo systemctl enable ysynth4.service
+sudo systemctl start ysynth4.service
+sudo mv /home/pi/ysynth4/90-usbmidiconnect.rules /etc/udev/rules.d/
+sudo sed -i -e '$ a FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,codepage=932,uid=pi,gid=pi,dmask=000,fmask=011"' /etc/usbmount/usbmount.conf
+sudo reboot
