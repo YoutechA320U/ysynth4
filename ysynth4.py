@@ -36,7 +36,7 @@ img = Image.new('RGB', (width, height), color=(0, 0, 0))
 draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
-version= 1.1
+version= 1.2
 day="2019/08/23"
 volume = 70
 mode = 0
@@ -981,7 +981,7 @@ while True:
              time.sleep(2)
              mode2_default_disp()
           if latest_dl ==0:
-             download_v=subprocess.check_output("cat ysynth4/ysynth4.py.1|grep version=|awk '{print $2;}'" , shell=True)
+             download_v=subprocess.check_output("cat ysynth4/ysynth4.py.1|grep version=|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', '')
              print(version)
              print(download_v)
              print(download_v-version)
