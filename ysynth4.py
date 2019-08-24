@@ -36,8 +36,8 @@ img = Image.new('RGB', (width, height), color=(0, 0, 0))
 draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
-version= 1.1
-day="2019/08/23"
+version= 1.2
+day="2019/08/24"
 volume = 70
 mode = 0
 
