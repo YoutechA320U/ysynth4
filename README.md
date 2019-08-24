@@ -28,7 +28,7 @@ RaspberryPi 3Bで動作するハードウェアシンセサイザーです。チ
     シーケンサー:MIDIファイルを再生可能 ※任意の数のファイルを追加可能
 
 ## 開発環境
-    OS : Raspbian stretch Lite
+    OS : Raspbian buster Lite
     RaspberryPi : RaspberryPi 3B+
     Python : ver3.7
     
