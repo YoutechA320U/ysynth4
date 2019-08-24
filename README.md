@@ -13,7 +13,7 @@ RaspberryPi 3Bで動作するハードウェアシンセサイザーです。チ
 
 ## スペック
     *GM/GS/XG/エクスクルーシブメッセージ対応*
-    *Timidity++ version 2.40.0*
+    *Timidity++ version 2.14.0*
     
     システム:RaspberryPi 3B+, Raspbian buster Lite
     パート数:16
