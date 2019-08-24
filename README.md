@@ -10,7 +10,7 @@ RaspberryPi 3Bで動作するハードウェアシンセサイザーです。チ
 
 ※作例です。このリポジトリのソースコードにMIDIキーボードに関係するコードは含まれていません。
 
-![SS](https://github.com/YoutechA320U/ysynth3/blob/master/SS/ysynth4_hard.jpg "作例")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4_hard.jpg "作例")
 
 ## スペック
     *GM/GS/XG/エクスクルーシブメッセージ対応*
@@ -34,12 +34,12 @@ RaspberryPi 3Bで動作するハードウェアシンセサイザーです。チ
     Python : ver3.7
     
 ## 回路図
-![SS](https://github.com/YoutechA320U/ysynth3/blob/master/SS/circuit.png "回路図")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/circuit.png "回路図")
 
 ## 必要な部品
 
 ## インストール方法
-※OSはRaspbian stretch Lite前提です。インストールの時のみ、より高性能なRaspberryPi 3B+を使うことをおすすめします。
+※OSはRaspbian buster Lite前提です。
 
 1. RaspberryPiをネットワークに接続して以下のコマンドを実行します。
 
