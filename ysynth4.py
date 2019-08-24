@@ -246,7 +246,8 @@ def mode2_default_disp():
 
 def dialog_window0():
    draw.rectangle((10, t_size_l_y+t_size_m_y+1, 150, 110),outline=(255,255,255), fill=(217,207,201))
-   draw.rectangle((10, t_size_l_y+t_size_m_y+1, 150, 20),outline=(217,207,201), fill=(8,34,109))
+   draw.rectangle((10, t_size_l_y+t_size_m_y+5, 150, 20),outline=(217,207,201), fill=(8,34,109))
+   draw.text((12,22),"確認",  font=fonts, fill=(255, 255, 255))
    draw.rectangle((20, 90, 70, 90+t_size_s_y),outline=(100,100,100), fill=(217,207,201))
    draw.rectangle((90, 90, 140, 90+t_size_s_y),outline=(100,100,100), fill=(217,207,201))
    draw.text((34,90),"はい",  font=fonts, fill=(0, 0, 0))
@@ -722,6 +723,7 @@ while True:
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fonts, fill=(255, 255, 255))  
           disp.display(img) 
        longpush_(input_DOWN)
+
     if GPIO.input(input_MODE) == 0:  
        time.sleep(0.01)
        if GPIO.input(input_RIGHT) == 0:
@@ -741,7 +743,6 @@ while True:
           if mode==2:      
              mode2_default_disp()
        longpush_(input_RIGHT)
-
        if GPIO.input(input_LEFT) == 0:
           mode -=1
           if mode <0:
@@ -787,9 +788,6 @@ while True:
           draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fonts, fill=(0, 255, 0))
           disp.display(img)
           longpush_(input_DOWN)  
-             
-       #while (GPIO.input(input_MODE)) == 0: 
-          #continue 
 
     if GPIO.input(input_OK) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)        
@@ -1017,7 +1015,7 @@ while True:
           draw.text((11, t_size_l_y+t_size_m_y*2+1),"シャットダウンしますか?",  font=fonts, fill=(0, 0, 0))
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fonts, fill=(0, 0, 0))
           disp.display(img)
-          dialog_loop0("   シャットダウンします...", "sudo shutdown -h now")
+          dialog_loop0("  シャットダウンします...", "sudo shutdown -h now")
 
        if mode==2 and mode2_coordi ==6:
           time.sleep(0.05)
