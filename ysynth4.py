@@ -36,8 +36,8 @@ img = Image.new('RGB', (width, height), color=(0, 0, 0))
 draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
-version= 1.2
-day="2019/08/24"
+version= 1.3
+day="2019/08/25"
 volume = 70
 mode = 0
 
@@ -891,6 +891,8 @@ while True:
              if dialog_coordi==0:
                 subprocess.call("sudo sed -i -e '$ a dtparam=audio=on' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtoverlay=iqaudio-dacplus/d' /boot/config.txt" ,shell=True)
+                subprocess.call("sudo sed -i -e '$ a opt B3,8' /etc/timidity/timidity.cfg" ,shell=True)
+                subprocess.call("sudo sed -i -e '/opt B2,8/d' /etc/timidity/timidity.cfg" ,shell=True)
                 subprocess.call("sudo reboot" ,shell=True)
                 
           if audio_card == str("bcm2835"):          
@@ -902,6 +904,8 @@ while True:
              if dialog_coordi==0:
                 subprocess.call("sudo sed -i -e '$ a dtoverlay=iqaudio-dacplus' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtparam=audio=on/d' /boot/config.txt" ,shell=True)
+                subprocess.call("sudo sed -i -e '$ a opt B2,8' /etc/timidity/timidity.cfg" ,shell=True)
+                subprocess.call("sudo sed -i -e '/opt B3,8/d' /etc/timidity/timidity.cfg" ,shell=True)
                 subprocess.call("sudo reboot" ,shell=True)
 
        if mode==2 and mode2_coordi ==2:
