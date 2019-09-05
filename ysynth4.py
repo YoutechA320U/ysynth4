@@ -365,7 +365,7 @@ def mode3_default_disp():
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:Scanning...", font=fontm, fill=(55, 255, 255))
    disp.display(img)
-   wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID | sed -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
+   wifi_psk=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep cta-guest -m1 -A 1|sed -e 's/ssid=//g' -e 's/"//g' -e '/psk/d' -e 's/psk=//g' -e 's/^[ \t]*//g' ''',shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
        [s for s in wifi if s != ""]
    if wifi[0]=="":
