@@ -37,7 +37,7 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.5
+version= 1.6
 day="2019/09/06"
 #*#*#*#*#*#*#*
 volume = 70
