@@ -366,10 +366,9 @@ def mode3_default_disp():
    draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:Scanning...", font=fontm, fill=(55, 255, 255))
    disp.display(img)
    wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID | sed -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
-   wifi_con=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep ssid |sed -e 's/ssid=//g' -e 's/"//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
        [s for s in wifi if s != ""]
-   if wifi[0]=="":
+   if wifi[0]=="" and len(wifi)==1:
       wifi[0]="見つかりませんでした"
    draw.rectangle((9+t_size_m_x*5, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"     {0:03d}/{1:03d}" .format(wificounter + 1,len(wifi)), font=fontm, fill=(55, 255, 255))
@@ -587,7 +586,6 @@ def sc_key():
                subprocess.call('''sudo sed -i -e '$ a psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
                subprocess.call('''sudo sed -i -e '$ a }' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''' ,shell=True)
-               time.sleep(3)
                mode2_default_disp()
                mode=2
                dialog_open=0
@@ -597,7 +595,6 @@ def sc_key():
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''' ,shell=True)
-               time.sleep(3)
                mode2_default_disp()
                mode=2
                dialog_open=0
@@ -1265,6 +1262,5 @@ while True:
              time.sleep(0.05)
              sc_key()   
               
-
     if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
        longpush=0 
