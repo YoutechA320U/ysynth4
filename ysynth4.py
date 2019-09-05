@@ -442,6 +442,7 @@ def dialog_loop0(txt, cmd):
              time.sleep(3)
              draw.rectangle((0, 0, 160, 128), (0,0,0)) 
              time.sleep(1)
+             break
           if dialog_coordi==1:
              mode2_default_disp()
              while (GPIO.input(input_OK)) == 0: 
