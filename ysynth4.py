@@ -367,23 +367,15 @@ def mode3_default_disp():
    disp.display(img)
    wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID | sed -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    wifi_con=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep ssid |sed -e 's/ssid=//g' -e 's/"//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
-   #wifi_ssid
-   #print(wifi)
-   #wifi[0]="非公開ネットワーク"
-   #for w in range(len(wifi)):
-    #if wifi[w]=="":
-       #wifi[w]="非公開ネットワーク"
    if len(wifi)>1:
        [s for s in wifi if s != ""]
    if wifi[0]=="":
       wifi[0]="見つかりませんでした"
-   print(len(wifi))
    draw.rectangle((9+t_size_m_x*5, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"     {0:03d}/{1:03d}" .format(wificounter + 1,len(wifi)), font=fontm, fill=(55, 255, 255))
    draw.text((mode2_coordi_xl[1], mode2_coordi_yl[1]),cur_size,  font=fontss, fill=(255, 255, 255))
    draw.text((9, t_size_l_y+t_size_m_y*2+1),wifi[wificounter], font=fontm, fill=(255, 255, 55))
    disp.display(img)
-   #print(wifi)
 
 def dialog_window0():
    draw.rectangle((10, t_size_l_y+t_size_m_y+1, 150, 110),outline=(255,255,255), fill=(217,207,201))
@@ -478,6 +470,7 @@ def sc_key():
    moji_in=list(moji_in)
    sckey_coordi = 0
    while True:
+      mididisp()
       time.sleep(0.001)
       sckey_coordi_size_x, sckey_coordi_size_y  = draw.textsize(moji[sckey_coordi], fonts)
       moji_center_w=(13-sckey_coordi_size_x)/2+1
@@ -594,12 +587,22 @@ def sc_key():
                subprocess.call('''sudo sed -i -e '$ a psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
                subprocess.call('''sudo sed -i -e '$ a }' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''' ,shell=True)
+               time.sleep(3)
                mode2_default_disp()
                mode=2
                dialog_open=0
                longpush_(input_OK)
                break
-               pass
+            if moji_in =="":
+               delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
+               subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
+               subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''' ,shell=True)
+               time.sleep(3)
+               mode2_default_disp()
+               mode=2
+               dialog_open=0
+               longpush_(input_OK)
+               break
          longpush_(input_OK)
       if GPIO.input(input_MODE) == 0 and shift==0: 
          shift=1
@@ -993,6 +996,7 @@ while True:
              mode2_default_disp()
        longpush_(input_RIGHT)
        if GPIO.input(input_LEFT) == 0:
+          dialog_open=0
           time.sleep(0.01)
           mode -=1
           if mode <0:
@@ -1023,6 +1027,7 @@ while True:
           disp.display(img)
           longpush_(input_UP)
        if GPIO.input(input_DOWN) == 0:
+          dialog_open=0
           time.sleep(0.01)
           volume -=1
           if volume<0:
