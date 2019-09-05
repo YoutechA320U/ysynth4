@@ -368,7 +368,7 @@ def mode3_default_disp():
    wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID | sed -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
        [s for s in wifi if s != ""]
-   if wifi[0]=="" and len(wifi)==1:
+   if wifi[0]=="":
       wifi[0]="見つかりませんでした"
    draw.rectangle((9+t_size_m_x*5, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"     {0:03d}/{1:03d}" .format(wificounter + 1,len(wifi)), font=fontm, fill=(55, 255, 255))
