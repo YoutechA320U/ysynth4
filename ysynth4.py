@@ -571,7 +571,7 @@ def sc_key():
                break
             if wifi_psk[1] !="" and moji_in !="" and wifi_psk[1] !=moji_in:
                tmp0="/{0}/".format(wifi[wificounter])
-               tmp1="{"+"n;s/{0}/{1}/;".format(wifi[wificounter],wifi_psk[1],moji_in)
+               tmp1="{"+"n;s/{0}/{1}/;".format(wifi[wificounter],moji_in)
                tmp=tmp0+tmp1+"}"
                subprocess.call('''cat /etc/wpa_supplicant/wpa_supplicant.conf |sudo sed -i -e '{}' /etc/wpa_supplicant/wpa_supplicant.conf'''.format(tmp) ,shell=True)
                subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
