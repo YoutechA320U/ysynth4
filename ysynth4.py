@@ -37,7 +37,7 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.6
+version= 1.5
 day="2019/09/06"
 #*#*#*#*#*#*#*
 volume = 70
@@ -365,7 +365,7 @@ def mode3_default_disp():
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:Scanning...", font=fontm, fill=(55, 255, 255))
    disp.display(img)
-   wifi_psk=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep cta-guest -m1 -A 1|sed -e 's/ssid=//g' -e 's/"//g' -e '/psk/d' -e 's/psk=//g' -e 's/^[ \t]*//g' ''',shell=True).decode('utf-8').strip().split('\n')
+   wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID | sed -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
        [s for s in wifi if s != ""]
    if wifi[0]=="":
@@ -449,7 +449,8 @@ def sc_key():
    wifi_conf=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep  ssid|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    wifi_conf_check=wifi[wificounter] in wifi_conf
    if wifi_conf_check is True:
-      wifi_psk=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep {0} -A 1|sed -e 's/ssid=//g' -e 's/"//g' -e 's/{0}//g' -e 's/psk=//g' -e 's/^[ \t]*//g' '''.format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
+      wifi_psk=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep {0} -m1 -A 1|sed -e 's/ssid=//g' -e 's/"//g' -e '/{0}/d' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' .format(wifi[wificounter]),shell=True).decode('utf-8').strip().split('\n')
+      print(wifi_psk)
       moji_in=wifi_psk
    shift=0
    moji=["1","2","3","4","5","6","7","8","9","0","-","BS","q","w","e","r","t","y","u","i",\
@@ -1112,7 +1113,7 @@ while True:
        if mode==2 and mode2_coordi ==1:
           time.sleep(0.05)
           dialog_window0()
-          if audio_card == str("IQaudIODAC"):
+          if audio_card == str("IQaudIODAC") or audio_card == str("") :
              draw.text((11, t_size_l_y+t_size_m_y*2+1)," bcm2835に切り替えます",  font=fontss, fill=(0, 0, 0))
              draw.text((11, t_size_l_y+t_size_m_y*3+1),"か?(再起動します)",  font=fontss, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fontss, fill=(0, 0, 0))
