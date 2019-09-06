@@ -446,14 +446,12 @@ def dialog_loop0(txt, cmd):
 def sc_key():
    global longpush, mode, dialog_open, wifi, wificounter, wifi_psk, wifi_conf
    moji_in=[]
-   wifi_psk=[]
+   wifi_psk=["",""]
    wifi_conf=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep  ssid|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    wifi_conf_check=wifi[wificounter] in wifi_conf
    if wifi_conf_check is True:
       wifi_psk=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep {0} -m1 -A 1|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' .format(wifi[wificounter]),shell=True).decode('utf-8').strip().split('\n')
-      wifi_psk=wifi_psk[1]
-      #print(wifi_psk)
-      moji_in=wifi_psk
+      moji_in=wifi_psk[1]
    shift=0
    moji=["1","2","3","4","5","6","7","8","9","0","-","BS","q","w","e","r","t","y","u","i",\
    "o","p"," ","⏎","a","s","d","f","g","h","j","k","l",":","'","`","z","x","c","v","b","n",\
@@ -565,16 +563,15 @@ def sc_key():
             moji_in=list(moji_in)
          if sckey_coordi == 23 :
             moji_in=("".join(map(str, moji_in)))
-            wifi_psk=("".join(map(str, wifi_psk)))
-            if wifi_psk==moji_in:
+            if wifi_psk[1]==moji_in:
                mode2_default_disp()
                mode=2
                dialog_open=0
                longpush_(input_OK)
                break
-            if wifi_psk !="" and moji_in !="" and wifi_psk !=moji_in:
+            if wifi_psk[1] !="" and moji_in !="" and wifi_psk[1] !=moji_in:
                tmp0="/{0}/".format(wifi[wificounter])
-               tmp1="{"+"n;s/{0}/{1}/;".format(wifi[wificounter],wifi_psk,moji_in)
+               tmp1="{"+"n;s/{0}/{1}/;".format(wifi[wificounter],wifi_psk[1],moji_in)
                tmp=tmp0+tmp1+"}"
                subprocess.call('''cat /etc/wpa_supplicant/wpa_supplicant.conf |sudo sed -i -e '{}' /etc/wpa_supplicant/wpa_supplicant.conf'''.format(tmp) ,shell=True)
                subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
@@ -583,7 +580,7 @@ def sc_key():
                dialog_open=0
                longpush_(input_OK)
                break
-            if wifi_psk =="":
+            if wifi_psk[1] =="":
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
@@ -597,7 +594,8 @@ def sc_key():
             if moji_in =="":
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
-               subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
+               if wifi ==wifi_psk[0]:
+                  subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
                mode2_default_disp()
                mode=2
                dialog_open=0
