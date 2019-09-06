@@ -57,5 +57,6 @@ sudo mv /home/pi/ysynth4/90-usbmidiconnect.rules /etc/udev/rules.d/
 sudo pip3 install pillow
 sudo pip3 install st7735
 sudo pip3 install python-rtmidi
+sudo sed -i -e 's/ST7735_INVOFF = 0x20/ST7735_INVOFF = 0x21/g' -e 's/ST7735_INVON = 0x21/ST7735_INVON = 0x20/g' -e 's/self.data(0xC8)/self.data(0xC0)/g' /usr/local/lib/python3.7/dist-packages/ST7735/__init__.py
 #再起動
 sudo reboot
