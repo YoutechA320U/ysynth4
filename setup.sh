@@ -41,6 +41,9 @@ cd /home/pi/usbmount
 sudo dpkg-buildpackage -us -uc -b
 cd ..
 sudo apt install -y ./usbmount_0.0.24_all.deb
+sudo sed -i -e '/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,codepage=932,uid=pi,gid=pi,dmask=000,fmask=011"/d' /etc/usbmount/usbmount.conf
+sudo sed -i -e '$ a allow-hotplug wlan0\n /etc/network/interfacesiface wlan0 inet manual\n    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf' /etc/network/interfaces
+sudo sed -i -e '$ a FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,codepage=932,uid=pi,gid=pi,dmask=000,fmask=011"' /etc/usbmount/usbmount.conf
 #ttymidiのビルド&インストール
 git clone https://github.com/YoutechA320U/ttymidi
 cd /home/pi/ttymidi
