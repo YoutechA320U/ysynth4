@@ -37,8 +37,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.7
-day="2019/09/06"
+version= 1.74
+day="2019/09/07"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -194,8 +194,7 @@ dialog_coordi_yl=[90,90]
 sckey_coordi=0
 
 msg = None
-def mididisp():
-##MIDI入力をディスプレイに反映する処理
+def mididisp(): #MIDI入力をディスプレイに反映する処理
     global midiPROG,midiCC7,midiCC11,midiCC10,midiCC10,midiCC1,midiCC91,midiCC93,midiCC94,pb1,pb2
     msg = midiin.get_message()
     if msg is None:
@@ -203,7 +202,6 @@ def mididisp():
        time.sleep(0.00001) 
     if msg is not None:
        message, deltatime = msg
-       #time.sleep(0.00001) 
        try:
         if message == ([240, 65, 16, 66, 18, 64, 0, 127, 0, 65, 247]) or message ==( [240, 67, 16, 76, 0, 0, 126, 0, 247]) or message == ([240, 126, 127, 9, 1, 247]) or message == ([240, 126, 127, 9, 3, 247]) :
            midiPROG= [0]*16
@@ -230,6 +228,7 @@ def mididisp():
               draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
               disp.display(img)
        except :
+        time.sleep(0.00001) 
         pass
        for forlch in range(16):
         if message[0] == 192+forlch :
@@ -298,7 +297,7 @@ def mididisp():
                  disp.display(img)
 ##MIDI入力をディスプレイに反映する処理ここまで
 
-def mode0_default_disp():
+def mode0_default_disp(): #モード1(MIDIコントローラ)の表示
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fontss, fill=(255, 255, 255))
    draw.text((9, 0),"CH:",  font=fontl, fill=(55, 255, 255))
@@ -324,7 +323,7 @@ def mode0_default_disp():
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    disp.display(img)
 
-def mode1_default_disp():
+def mode1_default_disp(): #モード2(シーケンサー)の表示
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi]),cur_size,  font=fontss, fill=(255, 255, 255))
    draw.text((9, 0),"SMF",  font=fontl, fill=(255, 255, 55))
@@ -339,7 +338,7 @@ def mode1_default_disp():
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    disp.display(img)
 
-def mode2_default_disp():
+def mode2_default_disp(): #モード(設定)の表示
    wifi_ssid=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
    if wifi_ssid=="off/any":
       wifi_ssid="接続していません" 
@@ -357,7 +356,7 @@ def mode2_default_disp():
    draw.text((t_size_m_x*7, t_size_l_y+t_size_m_y*2+1),audio_card,  font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    disp.display(img)
-def mode3_default_disp():
+def mode3_default_disp(): #モード3(WiFi選択)の表示
    global wifi, wificounter
    wificounter=0
    draw.rectangle((0, 0, 160, 128), (0,0,0))
@@ -377,7 +376,7 @@ def mode3_default_disp():
    draw.text((9, t_size_l_y+t_size_m_y*2+1),wifi[wificounter], font=fontm, fill=(255, 255, 55))
    disp.display(img)
 
-def dialog_window0():
+def dialog_window0(): #ダイアログのウィンドウを開く1種類目（※これ以外ないです）
    draw.rectangle((10, t_size_l_y+t_size_m_y+1, 150, 110),outline=(255,255,255), fill=(217,207,201))
    draw.rectangle((10, t_size_l_y+t_size_m_y+5, 150, 20),outline=(217,207,201), fill=(8,34,109))
    draw.text((12,22),"確認",  font=fontss, fill=(255, 255, 255))
@@ -387,7 +386,7 @@ def dialog_window0():
    draw.text((98,90),"いいえ",  font=fontss, fill=(0, 0, 0))
    disp.display(img)
    
-def longpush_(button):
+def longpush_(button): #長押し
     global longpush
     while (GPIO.input(button) == 0 and longpush !=100): 
           mididisp()
@@ -398,7 +397,7 @@ def longpush_(button):
           else:
              continue
 
-def dialog_loop0(txt, cmd):
+def dialog_loop0(txt, cmd): #ダイアログの選択待ち
     global dialog_coordi, dialog_coordi_xl, dialog_coordi_yl, longpush
     while (GPIO.input(input_OK)) == 0: 
           mididisp()
@@ -443,7 +442,7 @@ def dialog_loop0(txt, cmd):
              break
        if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT))== 1 and longpush !=0:  
           longpush=0 
-def sc_key():
+def sc_key(): #スクリーンキーボード
    global longpush, mode, dialog_open, wifi, wificounter, wifi_psk, wifi_conf
    moji_in=[]
    wifi_psk=["",""]
@@ -570,10 +569,12 @@ def sc_key():
                longpush_(input_OK)
                break
             if wifi_psk[1] !="" and moji_in !="" and wifi_psk[1] !=moji_in:
-               tmp0="/{0}/".format(wifi[wificounter])
-               tmp1="{"+"n;s/{0}/{1}/;".format(wifi[wificounter],moji_in)
-               tmp=tmp0+tmp1+"}"
-               subprocess.call('''cat /etc/wpa_supplicant/wpa_supplicant.conf |sudo sed -i -e '{}' /etc/wpa_supplicant/wpa_supplicant.conf'''.format(tmp) ,shell=True)
+               delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
+               subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
+               subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
+               subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
+               subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
+               subprocess.call('''sudo sed -i -e '$ a }' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
                mode2_default_disp()
                mode=2
