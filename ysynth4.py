@@ -37,7 +37,7 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.74
+version= 1.75
 day="2019/09/07"
 #*#*#*#*#*#*#*
 volume = 70
@@ -595,8 +595,7 @@ def sc_key(): #スクリーンキーボード
             if moji_in =="":
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
-               if wifi ==wifi_psk[0]:
-                  subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
+               subprocess.call(['sudo', 'wpa_cli', '-i', 'wlan0', 'reconfigure'])
                mode2_default_disp()
                mode=2
                dialog_open=0
