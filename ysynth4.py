@@ -449,7 +449,7 @@ def sc_key(): #スクリーンキーボード
    wifi_conf=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    wifi_conf_check=wifi[wificounter] in wifi_conf
    if wifi_conf_check is True:
-      wifi_psk=subprocess.check_output('''grep {} -m1 -A 1/etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' .format(wifi[wificounter]),shell=True).decode('utf-8').strip().split('\n')
+      wifi_psk=subprocess.check_output('''grep {} -m1 -A 1 /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' .format(wifi[wificounter]),shell=True).decode('utf-8').strip().split('\n')
       moji_in=wifi_psk[1]
    shift=0
    moji=["1","2","3","4","5","6","7","8","9","0","-","BS","q","w","e","r","t","y","u","i",\
