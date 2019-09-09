@@ -563,6 +563,10 @@ def sc_key(): #スクリーンキーボード
          if sckey_coordi == 23 :
             moji_in=("".join(map(str, moji_in)))
             if wifi_psk[1]==moji_in and wifi_psk[1] !="" and moji_in !="":
+               mode2_default_disp()
+               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
+               disp.display(img)
                wpa_list=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/[ ]//g' -e 's/"//g' ''',shell=True).decode('utf=8').strip().split('\n')
                subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
                subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
@@ -572,10 +576,6 @@ def sc_key(): #スクリーンキーボード
                   subprocess.check_output('''sudo wpa_cli -i wlan0 select_network {}'''.format(wpa_list_index) ,shell=True)
                else:
                   pass
-               mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
                time.sleep(6)
                mode2_default_disp()
                mode=2
@@ -589,6 +589,10 @@ def sc_key(): #スクリーンキーボード
                longpush_(input_OK)
                break
             if wifi_psk[1] !="" and moji_in !="" and wifi_psk[1] !=moji_in:
+               mode2_default_disp()
+               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
+               disp.display(img)
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
@@ -614,10 +618,6 @@ def sc_key(): #スクリーンキーボード
                   subprocess.check_output('''sudo wpa_cli -i wlan0 select_network {}'''.format(wpa_list_index) ,shell=True)
                else:
                   pass
-               mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
                time.sleep(6)
                mode2_default_disp()
                mode=2
@@ -625,6 +625,10 @@ def sc_key(): #スクリーンキーボード
                longpush_(input_OK)
                break
             if wifi_psk[1] =="":
+               mode2_default_disp()
+               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
+               disp.display(img)
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
@@ -644,10 +648,6 @@ def sc_key(): #スクリーンキーボード
                   subprocess.check_output('''sudo wpa_cli -i wlan0 select_network {}'''.format(wpa_list_index) ,shell=True)
                else:
                   pass
-               mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
                time.sleep(6)
                mode2_default_disp()
                mode=2
@@ -655,15 +655,15 @@ def sc_key(): #スクリーンキーボード
                longpush_(input_OK)
                break
             if moji_in =="":
+               mode2_default_disp()
+               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
+               disp.display(img)
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
                subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''',shell=True)
-               mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
                time.sleep(6)
                mode2_default_disp()
                mode=2
