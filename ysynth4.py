@@ -37,8 +37,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.8
-day="2019/09/09"
+version= 1.81
+day="2019/09/10"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -1243,8 +1243,9 @@ while True:
                 dialog_coordi=1
                 mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
                 mode2_default_disp()
+                continue
 
-          if mountcheck == str("/media/usb0"):          
+          if mountcheck == str("/media/usb0"):  
              draw.text((11, t_size_l_y+t_size_m_y*2+1),"    取り出しますか?",  font=fontss, fill=(0, 0, 0))
              draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fontss, fill=(0, 0, 0))
              disp.display(img)
