@@ -37,7 +37,7 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.76
+version= 1.8
 day="2019/09/09"
 #*#*#*#*#*#*#*
 volume = 70
@@ -151,8 +151,8 @@ def allnoteoff():
         midiout.send_message([a, 0x78, 0x00])
         a += 1
 subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
-wifi_connect=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
-if wifi_connect=="off/any":
+wifi_connect=subprocess.check_output('''wpa_cli -i wlan0 status|grep -v bssid |grep ssid |sed -e 's/ssid=//g' ''' ,shell=True).decode('utf-8').strip()
+if wifi_connect=="":
    wifi_connect="接続できません" 
 #wifi_connect="**********"
 audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', '').replace(',', ''))
@@ -340,8 +340,8 @@ def mode1_default_disp(): #モード2(シーケンサー)の表示
 
 def mode2_default_disp(): #モード(設定)の表示
    global wifi_connect
-   wifi_connect=str(subprocess.check_output('''iwconfig wlan0 | grep ESSID | sed -e 's/wlan0//g' -e 's/IEEE 802.11//g' -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip())
-   if wifi_connect=="off/any" and wifi_connect!="お待ちください...":
+   wifi_connect=subprocess.check_output('''wpa_cli -i wlan0 status|grep -v bssid |grep ssid |sed -e 's/ssid=//g' ''' ,shell=True).decode('utf-8').strip()
+   if wifi_connect=="" and wifi_connect!="お待ちください...":
       wifi_connect="接続できません" 
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fontss, fill=(255, 255, 255))
@@ -365,7 +365,7 @@ def mode3_default_disp(): #モード3(WiFi選択)の表示
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:Scanning...", font=fontm, fill=(55, 255, 255))
    disp.display(img)
-   wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID | sed -e 's/ESSID://g' -e 's/"//g' -e 's/^[ ]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
+   wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID |sed -e 's/ESSID://g' -e 's/[ ]//g' -e 's/"//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
       wifi= [s for s in wifi if s != ""]
    if wifi[0]=="":
@@ -564,6 +564,9 @@ def sc_key(): #スクリーンキーボード
             moji_in=("".join(map(str, moji_in)))
             if wifi_psk[1]==moji_in and wifi_psk[1] !="" and moji_in !="":
                wpa_list=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/[ ]//g' -e 's/"//g' ''',shell=True).decode('utf=8').strip().split('\n')
+               subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
+               subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
+               subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''',shell=True)
                if wifi[wificounter] in wpa_list:
                   wpa_list_index=wpa_list.index(wifi[wificounter])
                   subprocess.check_output('''sudo wpa_cli -i wlan0 select_network {}'''.format(wpa_list_index) ,shell=True)
@@ -592,6 +595,8 @@ def sc_key(): #スクリーンキーボード
                subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
                subprocess.call('''sudo sed -i -e '$ a }' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
+               subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
+               subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                wpa_reconfigure=subprocess.check_output('''sudo wpa_cli -i wlan0 reconfigure''',shell=True).strip().decode('utf-8')
                if wpa_reconfigure=="FAIL":
                   delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
@@ -600,6 +605,8 @@ def sc_key(): #スクリーンキーボード
                   subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                   subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi_psk[1] ),shell=True)
                   subprocess.call('''sudo sed -i -e '$ a }' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
+                  subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
+                  subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                   subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''',shell=True)
                wpalist=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/[ ]//g' -e 's/"//g' ''',shell=True).decode('utf=8').strip().split('\n')
                if wifi[wificounter] in wpalist:
@@ -622,10 +629,14 @@ def sc_key(): #スクリーンキーボード
                subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
                subprocess.call('''sudo sed -i -e '$ a }' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
+               subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
+               subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                wpa_reconfigure=subprocess.check_output('''sudo wpa_cli -i wlan0 reconfigure''',shell=True).strip().decode('utf-8')
                if wpa_reconfigure=="FAIL":
                   delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                   subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
+                  subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
+                  subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                   subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''',shell=True)
                wpalist=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/[ ]//g' -e 's/"//g' ''',shell=True).decode('utf=8').strip().split('\n')
                if wifi[wificounter] in wpalist:
@@ -646,6 +657,8 @@ def sc_key(): #スクリーンキーボード
             if moji_in =="":
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
+               subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
+               subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''',shell=True)
                mode2_default_disp()
                draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
