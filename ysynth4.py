@@ -446,10 +446,10 @@ def sc_key(): #スクリーンキーボード
    global longpush, mode, dialog_open, wifi, wificounter, wifi_psk, wifi_conf,dialog_open
    moji_in=[]
    wifi_psk=["",""]
-   wifi_conf=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep  ssid|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
+   wifi_conf=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
    wifi_conf_check=wifi[wificounter] in wifi_conf
    if wifi_conf_check is True:
-      wifi_psk=subprocess.check_output('''cat /etc/wpa_supplicant/wpa_supplicant.conf |grep {0} -m1 -A 1|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' .format(wifi[wificounter]),shell=True).decode('utf-8').strip().split('\n')
+      wifi_psk=subprocess.check_output('''grep {} -m1 -A 1/etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' .format(wifi[wificounter]),shell=True).decode('utf-8').strip().split('\n')
       moji_in=wifi_psk[1]
    shift=0
    moji=["1","2","3","4","5","6","7","8","9","0","-","BS","q","w","e","r","t","y","u","i",\
@@ -1178,7 +1178,6 @@ while True:
                continue 
           mode=3
 
-
        if mode==2 and mode2_coordi ==1:
           time.sleep(0.05)
           dialog_window0()
@@ -1271,6 +1270,7 @@ while True:
           draw.text((11, t_size_l_y+t_size_m_y*2+1)," アップデートしますか?",  font=fontss, fill=(0, 0, 0))
           draw.text((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi]),cur_size,  font=fontss, fill=(0, 0, 0))
           disp.display(img)
+          subprocess.call("sudo rm /home/pi/ysynth4/ysynth4.py.*" , shell=True)
           dialog_loop0("    ダウンロード中...", "wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/ysynth4.py -P /home/pi/ysynth4/")
           latest_dl =int(subprocess.check_output("test -f /home/pi/ysynth4/ysynth4.py.1;echo $?" ,shell=True).decode('utf-8').strip())
           if latest_dl == 1 and dialog_coordi==0:
@@ -1281,7 +1281,7 @@ while True:
              time.sleep(2)
              mode2_default_disp()
           if latest_dl ==0:
-             download_v=float(subprocess.check_output("sudo cat /home/pi/ysynth4/ysynth4.py.1|grep -m1 version=|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
+             download_v=float(subprocess.check_output("grep -m1 version= /home/pi/ysynth4/ysynth4.py.1|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
              if download_v > version:
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
                 draw.text((3,60),"  アップデートします...",  font=fontss, fill=(0, 255, 0))
@@ -1295,7 +1295,7 @@ while True:
              if download_v <= version:
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
                 draw.text((3,60),"   最新のバージョンです",  font=fontss, fill=(0, 255, 0))
-                subprocess.call("sudo rm /home/pi/ysynth4/ysynth4.py.1" , shell=True)
+                subprocess.call("sudo rm /home/pi/ysynth4/ysynth4.py.*" , shell=True)
                 disp.display(img)
                 dialog_coordi=1
                 time.sleep(2)
