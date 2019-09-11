@@ -34,7 +34,9 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
     
 ## 回路図
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/circuit.png "回路図")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4gb.png "ガーバーデータ")
 
+ガーバーデータは[Ysynth4R2.2gb.zip](https://github.com/YoutechA320U/ysynth4/blob/master/SS/Ysynth4R2.2gb.zip)にまとめてあります。各種サービスで発注可能です。
 ## 必要な部品
 
 ※基板やピンソケット、つまみ、取付ネジは除く
@@ -151,4 +153,5 @@ Ysynth4の本体スクリプトのみ再起動します。ダイアログボッ�
     [2018/08/25] - 調整(Ver.1.3)、README.mdを編集
     [2018/09/06] - 調整(Ver.1.6)    
     [2018/09/07] - WiFi設定機能を追加(Ver.1.75)、README.mdを編集
-    [2018/09/06] - WiFi設定機能を修正(Ver.1.8)、README.mdを編集
+    [2018/09/09] - WiFi設定機能を修正(Ver.1.8)、README.mdを編集
+    [2018/09/11] - ガーバーデータを追加
