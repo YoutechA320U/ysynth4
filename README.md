@@ -36,7 +36,7 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/circuit.png "回路図")
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4gb.png "ガーバーデータ")
 
-ガーバーデータは[Ysynth4R2.2gb.zip](https://github.com/YoutechA320U/ysynth4/blob/master/SS/Ysynth4R2.2gb.zip)にまとめてあります。各種サービスで発注可能です。
+ガーバーデータは[Ysynth4R2.2gb.zip](https://github.com/YoutechA320U/ysynth4/blob/master/Ysynth4R2.2gb.zip)にまとめてあります。各種サービスで発注可能です。
 ## 必要な部品
 
 ※基板やピンソケット、つまみ、取付ネジは除く
