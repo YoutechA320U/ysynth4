@@ -43,8 +43,8 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 
 |部品名|型番など|数量|
 |:---|:--:|---:|
-|RaspberryPi|RaspberryPi2B/3B/3B+|1|
-|Beetle - The Smallest Arduino Board|DFR0282|1|
+|RaspberryPi|RaspberryPi 3B/3B+|1|
+|Beetle - The Smallest Arduino Board|[DFR0282](https://www.switch-science.com/catalog/4284/)|1|
 |micoSDカード|クラス10またはUHF-1以上かつ8GB以上|1|
 |USBメモリ|FAT32でフォーマットが可能1GB以上|1|
 |I2S接続オーディオDAC（オプション）|Pi-DAC+相当のDAC(Pi-DAC Zeroなど)|（1）|
@@ -52,16 +52,18 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 |タクトスイッチ|[TVGP01-G73BBなど](http://akizukidenshi.com/catalog/g/gP-09826/)|6|
 |1/4Wカーボン抵抗|220Ω|9|
 ||270Ω|2|
-|発光ダイオード+対応する抵抗|3mm+1/4W|2|
+|発光ダイオード及び対応する抵抗|3mm+1/4W|2|
 |セラミックコンデンサ|0.1μF|1|
-|ロジックIC|74HC14|2|
+|シュミットトリガインバーターIC|74HC14|2|
 |スイッチングダイオード|[1N1418](http://akizukidenshi.com/catalog/g/gI-00941/)など|2|
 |フォトカプラ|[TLP785](http://akizukidenshi.com/catalog/g/gI-07554/)|2|
 |DIN-5ソケット(メス)|[KDJ103-5](http://akizukidenshi.com/catalog/g/gC-09565/)など|2|
 ## インストール方法
 ※OSはRaspbian buster Lite前提です。
 
-1. RaspberryPiをネットワークに接続して以下のコマンドを実行します。
+1. Beetle - The Smallest Arduino Boardには[こちらのUSB-MIDI変換プログラム](https://github.com/gdsports/MIDIUARTUSB)を書き込んでください。
+
+2. RaspberryPiをネットワークに接続して以下のコマンドを実行します。
 
     sudo apt-get update
 
@@ -71,9 +73,10 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
     
     git clone --recursive --depth 1 https://github.com/YoutechA320U/ysynth4.git
 
-2. `sudo sh /home/pi/ysynth4/setup.sh`でセットアップスクリプトを実行します。完了すると自動的に再起動します。
+3. `sudo sh /home/pi/ysynth4/setup.sh`でセットアップスクリプトを実行します。完了すると自動的に再起動します。
 
-3. ディスプレイが表示されたら完了です。
+4. ディスプレイが表示されたら完了です。
+
 
 ## 使い方
 Ysynth4基板とRaspberryPiを接続し、RaspberryPiにFAT32でフォーマットしたUSBメモリを接続します。
