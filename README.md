@@ -9,8 +9,8 @@ ysynth4は複数のソフトウェアで構成されています。他のソフ�
 RaspberryPi 3B+で動作するハードウェアシンセサイザーです。チャンネルごとにデータを送信、ディスプレイに表示するMIDIコントローラとしての機能と、チャンネルごとにデータを受信、ディスプレイに表示し、任意のサウンドフォント(.sf2)を鳴らせるMIDI音源としての機能、任意のMIDIファイルを自身や外部音源で演奏できるMIDIシーケンサーとしての機能を持ちます。
 
 
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4.png "3Dイメージ")
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4_hard.jpg "作例")
-
 ## スペック
     *GM/GS/XG/エクスクルーシブメッセージ対応*
     *Timidity++ version 2.14.0*
