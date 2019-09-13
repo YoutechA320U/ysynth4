@@ -10,6 +10,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import ST7735
+import threading
 
 width = 128
 height = 160
@@ -37,8 +38,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.81
-day="2019/09/10"
+version= 1.9
+day="2019/09/13"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -69,6 +70,8 @@ input_LEFT = 6
 input_RIGHT = 24
 input_UP = 23
 input_DOWN = 5
+mode0_write= False
+waitflag=0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(input_OK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -195,11 +198,12 @@ sckey_coordi=0
 
 msg = None
 def mididisp(): #MIDI入力をディスプレイに反映する処理
-    global midiPROG,midiCC7,midiCC11,midiCC10,midiCC10,midiCC1,midiCC91,midiCC93,midiCC94,pb1,pb2
+   global midiPROG,midiCC7,midiCC11,midiCC10,midiCC10,midiCC1,midiCC91,midiCC93,midiCC94,pb1,pb2,mode0_write
+   while True:
+    time.sleep(0.00001)
     msg = midiin.get_message()
     if msg is None:
-       message, deltatime = None,None
-       time.sleep(0.00001) 
+       message, deltatime = None,None 
     if msg is not None:
        message, deltatime = msg
        try:
@@ -226,9 +230,9 @@ def mididisp(): #MIDI入力をディスプレイに反映する処理
               draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y+1, 160, 128), (0,0,0))
               draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
               draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
-              disp.display(img)
+              mode0_write= True
+              
        except :
-        time.sleep(0.00001) 
         pass
        for forlch in range(16):
         if message[0] == 192+forlch :
@@ -237,56 +241,64 @@ def mididisp(): #MIDI入力をディスプレイに反映する処理
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y+1, 65, t_size_l_y+t_size_m_y*2), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==7:
            if midiCC7[forlch] != message[2]:
               midiCC7[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1, 65, t_size_l_y+t_size_m_y*3), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==11:
            if midiCC11[forlch] != message[2]:
               midiCC11[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 65, t_size_l_y+t_size_m_y*4), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==10:
            if midiCC10[forlch] != message[2]:
               midiCC10[forlch] = message[2] 
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1, 65, t_size_l_y+t_size_m_y*5), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==1:
            if midiCC1[forlch] != message[2]:
               midiCC1[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1, 65, t_size_l_y+t_size_m_y*6), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==91:
            if midiCC91[forlch] != message[2]:
               midiCC91[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1, 65, t_size_l_y+t_size_m_y*7), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==93:
            if midiCC93[forlch] != message[2]:
               midiCC93[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1, 65, 128), (0,0,0))
                  draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 176+forlch and message[1] ==94:
            if midiCC94[forlch] != message[2]:
               midiCC94[forlch] = message[2]
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y+1, 160,  t_size_l_y+t_size_m_y*2), (0,0,0))
                  draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
         if message[0] == 0xe0+forlch :
            if pb1[forlch] != message[1] or pb2[forlch] != message[2]:
               pb1[forlch] = message[1]
@@ -294,10 +306,12 @@ def mididisp(): #MIDI入力をディスプレイに反映する処理
               if mode == 0 and forlch==midiCH:
                  draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
                  draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[forlch]+pb1[forlch]-8192)), font=fontm, fill=(255, 255, 55))
-                 disp.display(img)
+                 mode0_write= True
+                 
 ##MIDI入力をディスプレイに反映する処理ここまで
 
 def mode0_default_disp(): #モード1(MIDIコントローラ)の表示
+   global mode0_write
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fontss, fill=(255, 255, 255))
    draw.text((9, 0),"CH:",  font=fontl, fill=(55, 255, 255))
@@ -321,7 +335,7 @@ def mode0_default_disp(): #モード1(MIDIコントローラ)の表示
    draw.text((cur_size_x+t_size_m_x*10, t_size_l_y+t_size_m_y*2+1),"P.BEND:", font=fontm, fill=(55, 255, 255))
    draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
-   disp.display(img)
+   mode0_write= True
 
 def mode1_default_disp(): #モード2(シーケンサー)の表示
    draw.rectangle((0, 0, 160, 128), (0,0,0))
@@ -358,18 +372,18 @@ def mode2_default_disp(): #モード(設定)の表示
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    disp.display(img)
 def mode3_default_disp(): #モード3(WiFi選択)の表示
-   global wifi, wificounter
+   global wifi, wificounter,waitflag
    wificounter=0
    draw.rectangle((0, 0, 160, 128), (0,0,0))
    draw.text((9, 0),"WiFi",  font=fontl, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
-   draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:Scanning...", font=fontm, fill=(55, 255, 255))
-   disp.display(img)
-   wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID |sed -e 's/ESSID://g' -e 's/[ ]//g' -e 's/"//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
+   waitflag=2
+   wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID |sed -e 's/ESSID://g' -e 's/[ ]//g' -e 's/"//g'|sort ''' ,shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
       wifi= [s for s in wifi if s != ""]
    if wifi[0]=="":
       wifi[0]="見つかりませんでした"
+   waitflag=0
    draw.rectangle((9+t_size_m_x*5, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
    draw.text((9, t_size_l_y+t_size_m_y+1),"     {0:03d}/{1:03d}" .format(wificounter + 1,len(wifi)), font=fontm, fill=(55, 255, 255))
    draw.text((mode2_coordi_xl[1], mode2_coordi_yl[1]),cur_size,  font=fontss, fill=(255, 255, 255))
@@ -389,7 +403,6 @@ def dialog_window0(): #ダイアログのウィンドウを開く1種類目（�
 def longpush_(button): #長押し
     global longpush
     while (GPIO.input(button) == 0 and longpush !=100): 
-          mididisp()
           time.sleep(0.01)
           longpush +=1
           if longpush==100:
@@ -400,11 +413,9 @@ def longpush_(button): #長押し
 def dialog_loop0(txt, cmd): #ダイアログの選択待ち
     global dialog_coordi, dialog_coordi_xl, dialog_coordi_yl, longpush
     while (GPIO.input(input_OK)) == 0: 
-          mididisp()
           continue 
     while True:
        time.sleep(0.00001)   
-       mididisp()
        if GPIO.input(input_RIGHT) == 0 :
           time.sleep(0.01)
           draw.rectangle((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi],dialog_coordi_xl[dialog_coordi]+cur_size_x, dialog_coordi_yl[dialog_coordi]+cur_size_y),(217,207,201))
@@ -437,13 +448,12 @@ def dialog_loop0(txt, cmd): #ダイアログの選択待ち
           if dialog_coordi==1:
              mode2_default_disp()
              while (GPIO.input(input_OK)) == 0: 
-                   mididisp()
                    continue 
              break
        if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT))== 1 and longpush !=0:  
           longpush=0 
 def sc_key(): #スクリーンキーボード
-   global longpush, mode, dialog_open, wifi, wificounter, wifi_psk, wifi_conf,dialog_open
+   global longpush, mode, dialog_open, wifi, wificounter, wifi_psk, wifi_conf,waitflag
    moji_in=[]
    wifi_psk=["",""]
    wifi_conf=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/"//g' -e 's/psk=//g' -e 's/^[ \t]*//g' ''' ,shell=True).decode('utf-8').strip().split('\n')
@@ -453,7 +463,7 @@ def sc_key(): #スクリーンキーボード
       moji_in=wifi_psk[1]
    shift=0
    moji=["1","2","3","4","5","6","7","8","9","0","-","BS","q","w","e","r","t","y","u","i",\
-   "o","p"," ","⏎","a","s","d","f","g","h","j","k","l",":","'","`","z","x","c","v","b","n",\
+   "o","p","","⏎","a","s","d","f","g","h","j","k","l",":","'","`","z","x","c","v","b","n",\
       "m",",",".","/","=","@"]
    draw.rectangle((0, 61, 160, 76),outline=(0,0,0), fill=(255,255,255))
    for k in range(48):
@@ -469,7 +479,6 @@ def sc_key(): #スクリーンキーボード
    moji_in=list(moji_in)
    sckey_coordi = 0
    while True:
-      mididisp()
       time.sleep(0.001)
       sckey_coordi_size_x, sckey_coordi_size_y  = draw.textsize(moji[sckey_coordi], fonts)
       moji_center_w=(13-sckey_coordi_size_x)/2+1
@@ -564,9 +573,7 @@ def sc_key(): #スクリーンキーボード
             moji_in=("".join(map(str, moji_in)))
             if wifi_psk[1]==moji_in and wifi_psk[1] !="" and moji_in !="":
                mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
+               waitflag=1
                wpa_list=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/[ ]//g' -e 's/"//g' ''',shell=True).decode('utf=8').strip().split('\n')
                subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
                subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
@@ -577,6 +584,7 @@ def sc_key(): #スクリーンキーボード
                else:
                   pass
                time.sleep(6)
+               waitflag=0
                mode2_default_disp()
                mode=2
                dialog_open=0
@@ -590,9 +598,7 @@ def sc_key(): #スクリーンキーボード
                break
             if wifi_psk[1] !="" and moji_in !="" and wifi_psk[1] !=moji_in:
                mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
+               waitflag=1
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
@@ -619,6 +625,7 @@ def sc_key(): #スクリーンキーボード
                else:
                   pass
                time.sleep(6)
+               waitflag=0
                mode2_default_disp()
                mode=2
                dialog_open=0
@@ -626,9 +633,7 @@ def sc_key(): #スクリーンキーボード
                break
             if wifi_psk[1] =="":
                mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
+               waitflag=1
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
@@ -649,6 +654,7 @@ def sc_key(): #スクリーンキーボード
                else:
                   pass
                time.sleep(6)
+               waitflag=0
                mode2_default_disp()
                mode=2
                dialog_open=0
@@ -656,15 +662,14 @@ def sc_key(): #スクリーンキーボード
                break
             if moji_in =="":
                mode2_default_disp()
-               draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
-               draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
-               disp.display(img)
+               waitflag=1
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
                subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
                subprocess.call('''sudo wpa_cli -i wlan0 reconfigure''',shell=True)
                time.sleep(6)
+               waitflag=1
                mode2_default_disp()
                mode=2
                dialog_open=0
@@ -673,8 +678,8 @@ def sc_key(): #スクリーンキーボード
          longpush_(input_OK)
       if GPIO.input(input_MODE) == 0 and shift==0: 
          shift=1
-         moji=["!","¥","#","＄","%","^","&","*","(",")","_","BS","Q","W","E","R","T","Y","U","I",\
-         "O","P"," ","⏎","A","S","D","F","G","H","J","K","L",";",'"',"~","Z","X","C","V","B","N",\
+         moji=["!","\\","#","＄","%","^","&","*","(",")","_","BS","Q","W","E","R","T","Y","U","I",\
+         "O","P","","⏎","A","S","D","F","G","H","J","K","L",";",'"',"~","Z","X","C","V","B","N",\
             "M","<",">","?","+","|"]
          for k in range(48):
           k_size_x, k_size_y  = draw.textsize(moji[k], fonts)
@@ -715,7 +720,15 @@ def sc_key(): #スクリーンキーボード
 time.sleep(1)
 msg = None
 mode0_default_disp()
-while True:
+disp.display(img)
+
+def ysynthmain():
+ global longpush,volume,sf2,midi,mode0_coordi,mode1_coordi,mode2_coordi,mode3_coordi,mode0_coordi_xl,mode0_coordi_yl,\
+    mode1_coordi_xl,mode1_coordi_yl,mode2_coordi_xl,mode2_coordi_yl,mode3_coordi_xl,mode3_coordi_yl,midicounter,\
+       playflag,sf2counter,sf2used,mode,midiCH,midiPROG,midiCC7,midiCC11,midiCC10,midiCC10,midiCC1,midiCC91,\
+          midiCC93,midiCC94,pb1,pb2,dialog_coordi,wifi,wificounter,dialog_open,mode0_write,waitflag
+ while True:
+    time.sleep(0.01)
     try:
      if aplaymidi.poll() is not None:
         if mode == 1 and playflag[midicounter] == 1:
@@ -724,7 +737,6 @@ while True:
         playflag = [0]*len(midi)
     except:
      pass
-    mididisp()
     if GPIO.input(input_LEFT) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.00001)
        if mode==0:
@@ -745,14 +757,16 @@ while True:
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y+1, 160, 128), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))       
-             disp.display(img)
+             mode0_write= True
+             
           if mode0_coordi ==1:
              midiPROG[midiCH] -=1
              if midiPROG[midiCH] <0:
                 midiPROG[midiCH] =127
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y+1, 65, t_size_l_y+t_size_m_y*2), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xc0+midiCH, midiPROG[midiCH]])
           if mode0_coordi ==2:
              midiCC7[midiCH] -=1
@@ -760,7 +774,8 @@ while True:
                 midiCC7[midiCH] =127
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1, 65, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xb0+midiCH, 7, midiCC7[midiCH]])
           if mode0_coordi ==3:
              midiCC11[midiCH] -=1
@@ -768,7 +783,8 @@ while True:
                 midiCC11[midiCH] =127
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 65, t_size_l_y+t_size_m_y*4), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
-             disp.display(img) 
+             mode0_write= True
+              
              midiout.send_message([0xb0+midiCH, 11, midiCC11[midiCH]]) 
           if mode0_coordi ==4:
              midiCC10[midiCH] -=1
@@ -776,7 +792,8 @@ while True:
                 midiCC10[midiCH] =127
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1, 65, t_size_l_y+t_size_m_y*5), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xb0+midiCH, 10, midiCC10[midiCH]])
           if mode0_coordi ==5:
              midiCC1[midiCH] -=1
@@ -784,7 +801,8 @@ while True:
                 midiCC1[midiCH] =127
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1, 65, t_size_l_y+t_size_m_y*6), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xb0+midiCH, 1, midiCC1[midiCH]])
           if mode0_coordi ==6:
              midiCC91[midiCH] -=1
@@ -792,7 +810,8 @@ while True:
                 midiCC91[midiCH] =127
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1, 65, t_size_l_y+t_size_m_y*7), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xb0+midiCH, 91, midiCC91[midiCH]])
           if mode0_coordi ==7:
              midiCC93[midiCH] -=1
@@ -801,7 +820,8 @@ while True:
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1, 65, 128), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
              midiout.send_message([0xb0+midiCH, 93, midiCC93[midiCH]])
-             disp.display(img)
+             mode0_write= True
+             
           if mode0_coordi ==8:
              midiCC94[midiCH] -=1
              if midiCC94[midiCH] <0:
@@ -809,7 +829,8 @@ while True:
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y+1, 160,  t_size_l_y+t_size_m_y*2), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
              midiout.send_message([0xb0+midiCH, 94, midiCC94[midiCH]])
-             disp.display(img)
+             mode0_write= True
+             
           if mode0_coordi ==9:
              pb1[midiCH] -= 1
              if pb1[midiCH] < 0:
@@ -821,7 +842,8 @@ while True:
                    pb2[midiCH] -= 1
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xe0+midiCH, pb1[midiCH], pb2[midiCH]])
 
        if mode==1:
@@ -878,14 +900,14 @@ while True:
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y+1, 160, 128), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
           if mode0_coordi ==1:
              midiPROG[midiCH] +=1
              if midiPROG[midiCH] >127:
                 midiPROG[midiCH] =0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y+1, 65, t_size_l_y+t_size_m_y*2), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiPROG[midiCH] + 1)), font=fontm, fill=(255, 255, 55))
-             disp.display(img) 
+             mode0_write= True
              midiout.send_message([0xc0+midiCH, midiPROG[midiCH]])
           if mode0_coordi ==2:
              midiCC7[midiCH] +=1
@@ -893,7 +915,8 @@ while True:
                 midiCC7[midiCH] =0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1, 65, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*2+1),str("{0:03d}".format(midiCC7[midiCH])),  font=fontm, fill=(255, 255, 55))
-             disp.display(img) 
+             mode0_write= True
+              
              midiout.send_message([0xb0+midiCH, 7, midiCC7[midiCH]])
           if mode0_coordi ==3:
              midiCC11[midiCH] +=1
@@ -901,7 +924,7 @@ while True:
                 midiCC11[midiCH] =0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 65, t_size_l_y+t_size_m_y*4), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1),str("{0:03d}".format(midiCC11[midiCH])),  font=fontm, fill=(255, 255, 55))
-             disp.display(img) 
+             mode0_write= True
              midiout.send_message([0xb0+midiCH, 11, midiCC11[midiCH]])
           if mode0_coordi ==4:
              midiCC10[midiCH] +=1
@@ -909,7 +932,7 @@ while True:
                 midiCC10[midiCH] =0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1, 65, t_size_l_y+t_size_m_y*5), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*4+1),str("{0:03d}".format(midiCC10[midiCH]-64)),  font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
              midiout.send_message([0xb0+midiCH, 10, midiCC10[midiCH]])
           if mode0_coordi ==5:
              midiCC1[midiCH] +=1
@@ -917,7 +940,8 @@ while True:
                 midiCC1[midiCH] =0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1, 65, t_size_l_y+t_size_m_y*6), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*5+1),str("{0:03d}".format(midiCC1[midiCH])),  font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
+             
              midiout.send_message([0xb0+midiCH, 1, midiCC1[midiCH]])
           if mode0_coordi ==6:
              midiCC91[midiCH] +=1
@@ -925,7 +949,7 @@ while True:
                 midiCC91[midiCH] =0
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1, 65, t_size_l_y+t_size_m_y*7), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*6+1),str("{0:03d}".format(midiCC91[midiCH])), font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
              midiout.send_message([0xb0+midiCH, 91, midiCC91[midiCH]])
           if mode0_coordi ==7:
              midiCC93[midiCH] +=1
@@ -934,7 +958,7 @@ while True:
              draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1, 65, 128), (0,0,0))
              draw.text((t_size_m_x*5, t_size_l_y+t_size_m_y*7+1),str("{0:03d}".format(midiCC93[midiCH])),  font=fontm, fill=(255, 255, 55))
              midiout.send_message([0xb0+midiCH, 93, midiCC93[midiCH]])
-             disp.display(img)
+             mode0_write= True
           if mode0_coordi ==8:
              midiCC94[midiCH] +=1
              if midiCC94[midiCH] >127:
@@ -942,7 +966,7 @@ while True:
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y+1, 160,  t_size_l_y+t_size_m_y*2), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y+1),str("{0:03d}".format(midiCC94[midiCH])), font=fontm, fill=(255, 255, 55))
              midiout.send_message([0xb0+midiCH, 94, midiCC94[midiCH]])
-             disp.display(img)
+             mode0_write= True
           if mode0_coordi ==9:
              pb1[midiCH] += 1
              if pb1[midiCH] > 0x7f:
@@ -952,7 +976,7 @@ while True:
                    pb2[midiCH] = 0
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
-             disp.display(img)
+             mode0_write= True
              midiout.send_message([0xe0+midiCH, pb1[midiCH], pb2[midiCH]])
 
        if mode==1:
@@ -987,9 +1011,7 @@ while True:
           draw.text((9, t_size_l_y+t_size_m_y+1),"     {0:03d}" .format(wificounter+1), font=fontm, fill=(55, 255, 255))
           draw.text((9, t_size_l_y+t_size_m_y*2+1),wifi[wificounter], font=fontm, fill=(255, 255, 55))
           disp.display(img)
-
        longpush_(input_RIGHT)
-      
 
     if GPIO.input(input_UP) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)
@@ -999,7 +1021,7 @@ while True:
           if mode0_coordi <0:
              mode0_coordi=9
           draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fontss, fill=(255, 255, 255))   
-          disp.display(img) 
+          mode0_write= True
        if mode==1 and GPIO.input(input_OK) != 0:
           draw.rectangle((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi],mode1_coordi_xl[mode1_coordi]+cur_size_x, mode1_coordi_yl[mode1_coordi]+cur_size_y), (0,0,0))
           mode1_coordi -=1
@@ -1015,7 +1037,6 @@ while True:
           draw.text((mode2_coordi_xl[mode2_coordi], mode2_coordi_yl[mode2_coordi]),cur_size,  font=fontss, fill=(255, 255, 255))  
           disp.display(img) 
        longpush_(input_UP)
-
     if GPIO.input(input_DOWN) == 0 and GPIO.input(input_MODE) != 0: 
        time.sleep(0.01)
        if mode==0 and GPIO.input(input_OK) != 0:
@@ -1024,7 +1045,7 @@ while True:
           if mode0_coordi >9:
              mode0_coordi=0
           draw.text((mode0_coordi_xl[mode0_coordi], mode0_coordi_yl[mode0_coordi]),cur_size,  font=fontss, fill=(255, 255, 255)) 
-          disp.display(img)
+          mode0_write= True
        if mode==1 and GPIO.input(input_OK) != 0:
           draw.rectangle((mode1_coordi_xl[mode1_coordi], mode1_coordi_yl[mode1_coordi],mode1_coordi_xl[mode1_coordi]+cur_size_x, mode1_coordi_yl[mode1_coordi]+cur_size_y), (0,0,0))
           mode1_coordi +=1
@@ -1071,6 +1092,7 @@ while True:
           if mode==0:
              mode0_default_disp()
           if mode==1:
+
              mode1_default_disp()
              if sf2used[sf2counter]==1:
                 draw.text((9, t_size_l_y+t_size_m_y+1),"            ♪", font=fontm, fill=(55, 255, 255))
@@ -1078,7 +1100,7 @@ while True:
              if playflag[midicounter]==1:
                 draw.text((9, t_size_l_y+t_size_m_y*3+1),"            ▶", font=fontm, fill=(55, 255, 255))
                 disp.display(img)
-          if mode==2:      
+          if mode==2:
              mode2_default_disp()
        longpush_(input_LEFT)
 
@@ -1091,7 +1113,11 @@ while True:
           subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
           draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
           draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fontss, fill=(0, 255, 0))
-          disp.display(img)
+          if mode !=0:
+             disp.display(img)
+          if mode ==0:
+             mode0_write= True
+             
           longpush_(input_UP)
        if GPIO.input(input_DOWN) == 0:
           dialog_open=0
@@ -1102,7 +1128,11 @@ while True:
           subprocess.call('amixer cset numid=1 {}% > /dev/null'.format(volume) , shell=True)
           draw.rectangle((t_size_l_x*8+t_size_s_x*8, 0, t_size_l_x*9+t_size_s_x*10, t_size_s_y), (0,0,0))
           draw.text((t_size_l_x*8+t_size_s_x*8, 0),str(volume),  font=fontss, fill=(0, 255, 0))
-          disp.display(img)
+          if mode !=0:
+             disp.display(img)
+          if mode ==0:
+             mode0_write= True
+             
           longpush_(input_DOWN)  
 
     if GPIO.input(input_OK) == 0 and GPIO.input(input_MODE) != 0: 
@@ -1110,24 +1140,24 @@ while True:
        if mode==0:
           allnoteoff()
           while (GPIO.input(input_OK)) == 0: 
-               mididisp()
                continue 
        if mode==1 and mode1_coordi ==0 and sf2used[sf2counter]==0 and sf2[0] != "sf2_None":  
           time.sleep(0.05)
           sf2used = [0]*len(sf2)
           sf2used[sf2counter]=1
           draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-          draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
-          draw.text((9, t_size_l_y+t_size_m_y+1),"            Wait...", font=fontm, fill=(55, 255, 255))
-          disp.display(img)
+          waitflag=3
+
           subprocess.call('sudo killall timidity', shell=True)
           subprocess.call('sudo killall aplaymidi', shell=True)
           playflag = [0]*len(midi)
           subprocess.Popen('sudo timidity -c "/media/usb0/timidity_cfg/{}.cfg"' .format(sf2[sf2counter]), shell=True)
-          time.sleep(2)
+          time.sleep(3)
           subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
-          draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
-          draw.text((9, t_size_l_y+t_size_m_y+1),"            OK!", font=fontm, fill=(55, 255, 255))
+
+          draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+          draw.text((9, t_size_l_y+t_size_m_y*2+1),"準備完了!", font=fontm, fill=(255, 255, 55))
+          waitflag=0
           disp.display(img)
           midiPROG=  [0]*16
           midiCC7=  [100]*16
@@ -1141,7 +1171,7 @@ while True:
           pb2 = [0x40]*16
           time.sleep(2)
           mode1_default_disp()
-
+          
        if GPIO.input(input_OK) == 0 and  mode==1 and mode1_coordi ==1 : 
           if playflag[midicounter]==0 and midi[0] != "midi_None":
              time.sleep(0.05)
@@ -1155,7 +1185,6 @@ while True:
              disp.display(img)
              mode1_default_disp()
              while (GPIO.input(input_OK)) == 0: 
-               mididisp()
                continue 
 
           if GPIO.input(input_OK) == 0 and playflag[midicounter]==1:
@@ -1168,13 +1197,11 @@ while True:
              disp.display(img)
              mode1_default_disp()
              while (GPIO.input(input_OK)) == 0: 
-               mididisp()
                continue 
 
        if mode==2 and mode2_coordi ==0:
           time.sleep(0.05)
           while (GPIO.input(input_OK)) == 0: 
-               mididisp()
                continue 
           mode=3
 
@@ -1335,3 +1362,87 @@ while True:
               
     if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
        longpush=0 
+
+
+def mode0_write_():
+   global mode0_write
+   while True:
+      time.sleep(0.000000001)
+      if mode0_write is True and mode==0:
+         mode0_write= False
+         disp.display(img)
+         #time.sleep(0.01)
+         
+def waiting():
+   global waitflag
+   while True:
+      time.sleep(0.000000001)
+      if waitflag==1:
+         draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+         draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください",  font=fontm, fill=(255, 255, 55))
+         disp.display(img)
+         time.sleep(0.5)
+         if waitflag==1:
+            draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+            draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください.",  font=fontm, fill=(255, 255, 55))        
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==1:
+            draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+            draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください..",  font=fontm, fill=(255, 255, 55))        
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==1:
+            draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
+            draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください...",  font=fontm, fill=(255, 255, 55))
+            disp.display(img)
+            time.sleep(0.5)
+      if waitflag==2:
+         draw.rectangle((9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+         draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:検索中", font=fontm, fill=(55, 255, 255))
+         disp.display(img)
+         time.sleep(0.5)
+         if waitflag==2:
+            draw.rectangle((9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+            draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:検索中.", font=fontm, fill=(55, 255, 255))
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==2:
+            draw.rectangle((9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+            draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:検索中..", font=fontm, fill=(55, 255, 255))
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==2:
+            draw.rectangle((9, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
+            draw.text((9, t_size_l_y+t_size_m_y+1),"SSID:検索中...", font=fontm, fill=(55, 255, 255))
+            disp.display(img)        
+            time.sleep(0.5)
+            
+      if waitflag==3:
+         draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+         draw.text((9, t_size_l_y+t_size_m_y*2+1),"お待ちください", font=fontm, fill=(255, 255, 55))
+         disp.display(img)
+         time.sleep(0.5)
+         if waitflag==3:
+            draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+            draw.text((9, t_size_l_y+t_size_m_y*2+1),"お待ちください.", font=fontm, fill=(255, 255, 55))
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==3:
+            draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+            draw.text((9, t_size_l_y+t_size_m_y*2+1),"お待ちください..", font=fontm, fill=(255, 255, 55))
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==3:
+            draw.rectangle((9, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3+2), (0,0,0))
+            draw.text((9, t_size_l_y+t_size_m_y*2+1),"お待ちください...", font=fontm, fill=(255, 255, 55))
+            disp.display(img)        
+            time.sleep(0.5)
+thread1 = threading.Thread(target=mididisp)
+thread2 = threading.Thread(target=ysynthmain)
+thread3 = threading.Thread(target=mode0_write_)
+thread4 = threading.Thread(target=waiting)
+thread1.start()
+thread2.start()
+thread3.start()
+thread4.start()
