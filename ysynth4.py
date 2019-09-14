@@ -335,7 +335,7 @@ def mididisp(): #MIDI入力をディスプレイに反映する処理
 ##MIDI入力をディスプレイに反映する処理ここまで
 def waiting(): #待ち状態の処理
    global waitflag
-   while waitflag !=0:
+   while True:
       time.sleep(0.000000001)
       if waitflag==1:
          draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
@@ -400,7 +400,7 @@ def waiting(): #待ち状態の処理
             time.sleep(0.5)
 
 thread1 = threading.Thread(target=waiting)
-
+thread1.start()
 
 def mode0_default_disp(): #モード1(MIDIコントローラ)の表示
    global mode0_write
@@ -470,7 +470,6 @@ def mode3_default_disp(): #モード3(WiFi選択)の表示
    draw.text((9, 0),"WiFi",  font=fontl, fill=(255, 255, 55))
    draw.text((t_size_l_x*8, 0),"SysVol: "+str(volume),  font=fontss, fill=(0, 255, 0))
    waitflag=2
-   thread1.start()
    wifi=subprocess.check_output('''iwlist wlan0 scan| grep ESSID |sed -e 's/ESSID://g' -e 's/[ ]//g' -e 's/"//g'|sort ''' ,shell=True).decode('utf-8').strip().split('\n')
    if len(wifi)>1:
       wifi= [s for s in wifi if s != ""]
@@ -667,7 +666,6 @@ def sc_key(): #スクリーンキーボード
             if wifi_psk[1]==moji_in and wifi_psk[1] !="" and moji_in !="":
                mode2_default_disp()
                waitflag=1
-               thread1.start()
                wpa_list=subprocess.check_output('''grep ssid /etc/wpa_supplicant/wpa_supplicant.conf|sed -e 's/ssid=//g' -e 's/[ ]//g' -e 's/"//g' ''',shell=True).decode('utf=8').strip().split('\n')
                subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
                subprocess.call('''sudo ifconfig wlan0 up''',shell=True)
@@ -693,7 +691,6 @@ def sc_key(): #スクリーンキーボード
             if wifi_psk[1] !="" and moji_in !="" and wifi_psk[1] !=moji_in:
                mode2_default_disp()
                waitflag=1
-               thread1.start()
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
@@ -729,7 +726,6 @@ def sc_key(): #スクリーンキーボード
             if wifi_psk[1] =="":
                mode2_default_disp()
                waitflag=1
-               thread1.start()
                subprocess.call('''sudo sed -i -e '$ a network={' /etc/wpa_supplicant/wpa_supplicant.conf''' ,shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        ssid="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(wifi[wificounter]),shell=True)
                subprocess.call('''sudo sed -i -e '$ a \        psk="{}"' /etc/wpa_supplicant/wpa_supplicant.conf''' .format(moji_in),shell=True)
@@ -759,7 +755,6 @@ def sc_key(): #スクリーンキーボード
             if moji_in =="":
                mode2_default_disp()
                waitflag=1
-               thread1.start()
                delconf=subprocess.check_output('''grep -A 2 -B 1 {} -n /etc/wpa_supplicant/wpa_supplicant.conf| sed -e 's/:.*//g' -e 's/-.*//g' ''' .format(wifi[wificounter]) ,shell=True).decode('utf-8').strip().split('\n')
                subprocess.call('''sudo sed -i '{},{}d' /etc/wpa_supplicant/wpa_supplicant.conf ''' .format(delconf[0],delconf[len(delconf)-1]) ,shell=True)
                subprocess.call('''sudo ifconfig wlan0 down''',shell=True)
@@ -1245,7 +1240,6 @@ def ysynthmain():
           sf2used[sf2counter]=1
           draw.rectangle((t_size_m_x*13, t_size_l_y+t_size_m_y+1, 160, t_size_l_y+t_size_m_y*2+2), (0,0,0))
           waitflag=3
-          thread1.start()
           subprocess.call('sudo killall timidity', shell=True)
           subprocess.call('sudo killall aplaymidi', shell=True)
           playflag = [0]*len(midi)
