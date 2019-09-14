@@ -1,4 +1,10 @@
 #!/bin/sh
+
+#オリジナルのソースコード/Original Source
+# https://github.com/YoutechA320U/ysynth4
+#ライセンス/Licence
+# [MIT] https://github.com/YoutechA320U/ysynth4/blob/master/LICENSE
+
 #必要なパッケージのインストール
 sudo apt-get -y update 
 sudo apt-get -y upgrade 
