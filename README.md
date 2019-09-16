@@ -10,7 +10,7 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 
 
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4.png "3Dイメージ")
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4_hard.jpg "作例")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/ysynth4_hard.JPG "作例")
 ## スペック
     *GM/GS/XG/エクスクルーシブメッセージ対応*
     *Timidity++ version 2.14.0*
@@ -82,67 +82,67 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 Ysynth4基板とRaspberryPiを接続し、RaspberryPiにFAT32でフォーマットしたUSBメモリを接続します。
 電源投入直後MIDI-OUTのLEDが一瞬点灯し、ディスプレイ全体が白く発光します。
 しばらくするとディスプレイに「Ysynth4」の文字が上から降りてくる起動画面が表示されます。USBメモリが認識できていない場合は文字の代わりに四角が降ってきます。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp01.jpg "BOOT_1")
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp02.jpg "BOOT_2")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp01.JPG "BOOT_1")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp02.JPG "BOOT_2")
 起動画面の後後述の「MIDIコントローラモード」の画面が表示されたら操作可能になります。
 
 ## 操作方法
 基本的に十字キーの上下で項目の選択、左右キーで項目の値を操作し、MODEキーを押しながらだと別の動作をします。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp00.jpg "キー")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp00.JPG "キー")
 MODEキーを押しながら左右キーを押すと後述のモードを切り替え、MODEキーを押しながら上下キーだと本体の音量を調整します。
 
 もし液晶に何も映らなくなった場合はMODEキーを押しながら他のキーを全て押してください。液晶があ初期化されて表示が復活します。
 ### MIDIコントローラモード
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp03.jpg "MIDIコントローラモード")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp03.JPG "MIDIコントローラモード")
 起動時に選択されているモードです。
 
 チャンネル、プログラムチェンジ、ボリューム、エクスプレッション、パン、モジュレーション、リバーブ、コーラス、ディレイ、ピッチベンドの値を操作します。操作した値は本体音源とMIDI-OUT、USB-MIDI-OUTに反映されます。またUSB-MIDI機器を接続している場合その機器にも反映されます。逆にMIDI-INなどから本体にMIDIメッセージを受信した場合そのメッセージがディスプレイに反映されます。また、OKキーを押すと全チャンネルにノートオフメッセージが送信されます。
 
 ### SMFモード
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp04.jpg "SMFモード")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp04.JPG "SMFモード")
 サウンドフォントの選択とSMF（標準MIDIファイル）の再生を行います。
 
 サウンドフォントを左右キーで選択しOKキーを押すとそのサウンドフォントが選択されます。選択されたサウンドフォントの項目には「♪」が表示されます。サウンドフォントが選択されている場合、どのモードでもYsynth4はMIDI音源として機能します。MIDIコントローラモード、SMF再生及びMIDI-IN、USB-MIDI-INからのデータを受信し、またUSB-MIDI機器を接続している場合その機器からも受信します。
 
 SMFの再生は同じく左右キーで選択し、OKキーで再生します。再生時には「▶」が表示されます。再生中にもう一度OKキーを押すと停止します。データの送信範囲はMIDIコントローラモードと同じです。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp05.jpg "SMFモード")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp05.JPG "SMFモード")
 それぞれの項目で表示されるデータはUSBメモリ内の/sf2/フォルダと/midi/フォルダを参照しています。フォルダが存在しない場合は自動的に生成します。また、もし/sf2/フォルダに"FluidR3_GM.sf2"が存在しない場合自動的にコピーします。Ysynth4のメモリは1GBなのでサウンドフォントは1つあたり500MB程度にしてください。対応していないサウンドフォントの場合は選択できないまたは、選択しても音が出ません。
 
 サウンドフォントの重ね掛けは標準ではできませんが、サウンドフォント定義ファイルはUSBメモリの/timidity_cfg/に生成されています。もしそれが書き換えられるのなら重ね掛けも可能です。ただし、/timidity_cfg/フォルダと/sf2/フォルダのファイル名が一致しない場合、一致しないサウンドフォント定義ファイルは削除されます。
 
 ### 設定モード
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp07.jpg "設定モード")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp07.JPG "設定モード")
 各種設定を行います。他のモードより操作が複雑なので各項目の説明します。
 
 #### WiFi
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp08.jpg "WiFi")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp08.JPG "WiFi")
 
 後述のオンラインアップデートでネットワークに接続する時に使います。項目には現在接続しているアクセスポイント名が表示されます。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp09.jpg "WiFi")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp09.JPG "WiFi")
 項目でOKキーを押すとアクセスポイントのスキャンが始まり、アクセスポイントの選択画面になります。(アクセスポイントが存在しているのに直ぐに「見つかりませんでした」と出る場合はしばらく時間を空けてから実行してください)そこで更に左右キーで選択してOKキーを押すと、キーボードが出現し、パスワードの入力画面になります。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp10.jpg "WiFi")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp10.JPG "WiFi")
 十字キーで選択しOKキーで入力します。「BS」を押すと1文字削除し、「↩」を押すと入力完了し、設定モードに戻ります。設定したパスワードは保持されますがパスワードが8文字未満または64文字以上の場合設定は保持されず、以前の設定がある場合それに戻されます。またパスワードが空の場合、その設定は削除されます。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp11.jpg "WiFi")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp11.JPG "WiFi")
 
 ##### Audio
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp12.jpg "Audio")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp12.JPG "Audio")
 オーディオ出力先を選択します。項目には現在の出力先が表示されます。
 
 OKキーを押すとbcm2835（内蔵出力）かIQaudioDAC（Pi-DAC+系）に変更するかのダイアログボックスが出現します。左右キーで選択し、OKキーで決定します。「はい」で出力先を変更した場合、強制的に再起動し、変更が適用されます。
 
 #### USBメモリ
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp13.jpg "USB")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp13.JPG "USB")
 USBメモリの取り出し、認識の時に必ず行います。
 
 OKキーを押すと取り出すか認識させるかのダイアログボックスが出現します。左右キーで選択し、OKキーで決定します。取り出す場合前述のサウンドフォントの選択やSMFの再生が強制的に解除、停止します。
 
 #### Ysynth4アップデート
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp14.jpg "UPDATE")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp14.JPG "UPDATE")
 Ysynth4の本体スクリプトysynth4.pyを最新版にアップデートします。
 
 有線LANかWiFiでインターネットに接続してある必要があります。ダイアログボックスが出現し、左右キーで選択し、OKキーで決定します。
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp15.jpg "UPDATE")
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp16.jpg "UPDATE")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp15.JPG "UPDATE")
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp16.JPG "UPDATE")
 アップデート出来た場合、後述のリロードが行われます。
 
 #### 再起動
