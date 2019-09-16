@@ -20,8 +20,9 @@
 #ディスプレイの描画がマルチスレッド化され外部MIDI入力とボタンMIDI入力が完全に同時かつ更にバックグラウンドでも常時反映されるようになりました。
 
 #v1.91 [2018/09/14]
-#Ysynth4v1.91をリリースしました。
 #万が一ディスプレイがフリーズした場合にMODEキーを押しながら他のキーを全て押すとディスプレイが復帰するようになりました。
+#v1.91 [2018/09/16]
+#一部変数の抜けを修正しました。
 ##--##--##--##--##
 
 import RPi.GPIO as GPIO
@@ -62,8 +63,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.91
-day="2019/09/14"
+version= 1.92
+day="2019/09/16"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -818,7 +819,7 @@ def ysynthmain():
  global longpush,volume,sf2,midi,mode0_coordi,mode1_coordi,mode2_coordi,mode3_coordi,mode0_coordi_xl,mode0_coordi_yl,\
     mode1_coordi_xl,mode1_coordi_yl,mode2_coordi_xl,mode2_coordi_yl,mode3_coordi_xl,mode3_coordi_yl,midicounter,\
        playflag,sf2counter,sf2used,mode,midiCH,midiPROG,midiCC7,midiCC11,midiCC10,midiCC10,midiCC1,midiCC91,\
-          midiCC93,midiCC94,pb1,pb2,dialog_coordi,wifi,wificounter,dialog_open,mode0_write,waitflag
+          midiCC93,midiCC94,pb1,pb2,dialog_coordi,wifi,wificounter,dialog_open,mode0_write,waitflag,mountcheck
  while True:
     time.sleep(0.01)
     try:
