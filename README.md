@@ -180,6 +180,8 @@ Ysynth4の本体スクリプトのみ再起動します。ダイアログボッ�
 
 ## 備考
 
+質問やバグの報告は[このリポジトリのIssue](https://github.com/YoutechA320U/ysynth4/issues)か[作者のTwitter](https://twitter.com/YoutechA320U)へお願いします。
+
 ### 参考コード・資料
  * <http://artteknika.hatenablog.com/entry/2017/04/28/185509>  
  * <https://github.com/pimoroni/st7735-python>  
