@@ -8,21 +8,26 @@
 
 
 ##--リリースノート--##
-#v1.75[2018/09/07]
+#v1.75[2019/09/07]
 #スクリーンキーボードを使ってスタンドアロンにWiFiの設定が出来る様になりました.
 #これで有線LANを用意したり、キーボードとディスプレイを繋いで設定しなくてもオンラインアップデートが可能になりました。
 
-#v1.8[2018/09/09]
+#v1.8[2019/09/09]
 #WiFiで設定したアクセスポイントを優先して接続するようになりました。
 #他にもコマンドを見直してより安定するようになりました。
 
-#v1.9 [2018/09/13]
+#v1.9 [2019/09/13]
 #ディスプレイの描画がマルチスレッド化され外部MIDI入力とボタンMIDI入力が完全に同時かつ更にバックグラウンドでも常時反映されるようになりました。
 
-#v1.91 [2018/09/14]
-#万が一ディスプレイがフリーズした場合にMODEキーを押しながら他のキーを全て押すとディスプレイが復帰するようになりました。
-#v1.92 [2018/09/16]
+#v1.91 [2019/09/14]
+#万が一ディスプレイがフリーズした場合にMODEキーを押しながら他のキーを全て押すとディスプレイがリセットするようになりました。
+
+#v1.92 [2019/09/16]
 #一部変数の抜けを修正しました。
+
+#v1.94 [2019/10/14]
+#RaspbianbusterLiteに対応しています。
+#セットアップ時に自前でTimidity++version2.15.0をビルドするようになりました。
 ##--##--##--##--##
 
 import RPi.GPIO as GPIO
@@ -158,7 +163,7 @@ if (sf2 != cfg) and (sf2[0] != "sf2_None"):
  for x in range(len(list_difference)):
   subprocess.call('''sudo /home/pi/ysynth4/cfgforsf -C "/media/usb0/sf2/{sf2name}.sf2" | sed -e 's/(null)//' -e 's/^[ ]*//g' -e '/(null)#/d'  -e /^#/d | grep -C 1 % | sed -e '/--/d' -e /^$/d > "/media/usb0/timidity_cfg/{sf2name}.cfg"''' .format(sf2name=list_difference[x])  ,shell=True)
 if sf2[0] == "sf2_None":
-   subprocess.call('sudo rm /home/pi/timidity_cfg/*.cfg' ,shell=True)
+   subprocess.call('sudo rm /media/usb0/sf2/*.cfg' ,shell=True)
 
 draw.rectangle((0, 0, 160, 128), (0,0,0))
 time.sleep(2)
@@ -955,7 +960,7 @@ def ysynthmain():
              midicounter -= 1
              if midicounter == -1:
                 midicounter =  len(midi)-1
-             draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+             draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+3, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
              draw.rectangle((9, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
              draw.text((9+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}/{1:03d}".format(midicounter + 1 ,len(midi) ), font=fontm, fill=(55, 255, 255))
              draw.text((9, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))
@@ -1088,7 +1093,7 @@ def ysynthmain():
              midicounter += 1
              if midicounter == len(midi):
                 midicounter = 0
-             draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+1, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
+             draw.rectangle((t_size_m_x*5, t_size_l_y+t_size_m_y*3+3, 160, t_size_l_y+t_size_m_y*4+2), (0,0,0))
              draw.rectangle((9, t_size_l_y+t_size_m_y*4+1, 160, t_size_l_y+t_size_m_y*5+2), (0,0,0))
              draw.text((9+t_size_m_x*4, t_size_l_y+t_size_m_y*3+1),"{0:03d}/{1:03d}".format(midicounter + 1 ,len(midi) ), font=fontm, fill=(55, 255, 255))
              draw.text((9, t_size_l_y+t_size_m_y*4+1),midi[midicounter],  font=fontm, fill=(255, 255, 55))  
