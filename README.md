@@ -97,7 +97,7 @@ USBメモリが認識できていない場合は文字の代わりに四角が�
 
 MODEキーを押しながら左右キーを押すと後述のモードを切り替え、MODEキーを押しながら上下キーだと本体の音量を調整します。
 
-もし液晶に何も映らなくなった場合はMODEキーを押しながら他のキーを全て押してください。液晶があ初期化されて表示が復活します。
+もし液晶に何も映らなくなった場合はMODEキーを押しながら他のキーを全て押してください。液晶が初期化されて表示が復活します。
 ### MIDIコントローラモード
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp03.JPG "MIDIコントローラモード")
 
@@ -126,17 +126,22 @@ SMFの再生は同じく左右キーで選択し、OKキーで再生します。
 各種設定を行います。他のモードより操作が複雑なので各項目の説明します。
 
 #### WiFi
-![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp08.JPG "WiFi")
 
-後述のオンラインアップデートでネットワークに接続する時に使います。項目には現在接続しているアクセスポイント名が表示されます。
+後述のオンラインアップデートでネットワークに接続する時に使います。有線LANで接続する場合は必要ありません。
+
+項目には現在接続しているアクセスポイント名が表示されます。
+
+![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp08.JPG "WiFi")
 
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp09.JPG "WiFi")
 
 項目でOKキーを押すとアクセスポイントのスキャンが始まり、アクセスポイントの選択画面になります。(アクセスポイントが存在しているのに直ぐに「見つかりませんでした」と出る場合はしばらく時間を空けてから実行してください)そこで更に左右キーで選択してOKキーを押すと、キーボードが出現し、パスワードの入力画面になります。
 
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp10.JPG "WiFi")
+
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp10-2.JPG "WiFi")
-22文字までのパスワードを入力します。十字キーで選択しOKキーで入力します。MODEキーはShiftとして使います。「BS」を押すと1文字削除し、「↩」を押すと入力完了し、設定モードに戻ります。設定したパスワードは保持されますがパスワードが8文字未満の場合設定は保持されず、以前の設定がある場合それに戻されます。またパスワードが空の場合、その設定は削除されます。
+
+22文字までのパスワードを入力します。十字キーで選択しOKキーで入力します。MODEキーはShiftとして機能します。「BS」を押すと1文字削除し、「↩」を押すと入力完了で、設定モードに戻ります。設定したパスワードは保持されますがパスワードが8文字未満の場合設定は保持されず、以前の設定がある場合それに戻されます。またパスワードが空の場合、その設定は削除されます。
 
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp11.JPG "WiFi")
 
@@ -177,6 +182,8 @@ Ysynth4の本体スクリプトysynth4.pyを最新版にアップデートしま
 Ysynth4の本体スクリプトのみ再起動します。ダイアログボックスが出現し、左右キーで選択し、OKキーで決定します。
 
 ## 備考
+
+質問やバグの報告は[このリポジトリのIssue](https://github.com/YoutechA320U/ysynth4/issues)か[作者のTwitter](https://twitter.com/YoutechA320U)へお願いします。
 
 ### 参考コード・資料
  * <http://artteknika.hatenablog.com/entry/2017/04/28/185509>  
