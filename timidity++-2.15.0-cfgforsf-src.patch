@@ -1,5 +1,5 @@
---- TiMidity++-2.14.0.orig/interface/dumb_c.c
-+++ TiMidity++-2.14.0/interface/dumb_c.c
+--- TiMidity++-2.15.0.orig/interface/dumb_c.c
++++ TiMidity++-2.15.0/interface/dumb_c.c
 @@ -51,7 +51,9 @@
  static void ctl_total_time(long tt);
  static void ctl_file_name(char *name);
@@ -26,8 +26,8 @@
  
  static void ctl_event(CtlEvent *e)
  {
---- TiMidity++-2.14.0.orig/timidity/sndfont.c
-+++ TiMidity++-2.14.0/timidity/sndfont.c
+--- TiMidity++-2.15.0.orig/timidity/sndfont.c
++++ TiMidity++-2.15.0/timidity/sndfont.c
 @@ -66,6 +66,8 @@
   *----------------------------------------------------------------*/
  
