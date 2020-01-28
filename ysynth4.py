@@ -854,7 +854,7 @@ if Timidity_Version != "2.15.0" :
    disp.display(img)
    Timidity_Version = subprocess.check_output("timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$" , shell=True).decode('utf-8').replace('\n', '')
 if Timidity_Version == "2.15.0" :
-   subprocess.call("sudo sed -i '838,852d' /home/pi/ysynth4/ysynth4.py" , shell=True)
+   subprocess.call("sudo sed -i '843,857d' /home/pi/ysynth4/ysynth4.py" , shell=True)
 
 ##初期設定ここまで##
 time.sleep(1)
