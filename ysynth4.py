@@ -846,7 +846,7 @@ if Timidity_Version != "2.15.0" :
    draw.rectangle((0, 0, 160, 128), (0,0,0)) 
    waitflag=4
    subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
-   subprocess.call("wget https://github.com/YoutechA320U/ysynth4/blob/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
+   subprocess.call("wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
    subprocess.call("sudo mv -f /home/pi/ysynth4/setup.sh.1 /home/pi/ysynth4/setup.sh" , shell=True)
    subprocess.call("sudo sh /home/pi/ysynth4/setup.sh" , shell=True)
    waitflag=0
