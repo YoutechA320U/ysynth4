@@ -981,8 +981,6 @@ def ysynthmain():
              elif pb1[midiCH] == 0x00 and pb2[midiCH] == 0x00:
                 pb1[midiCH] = 0x7f
                 pb2[midiCH] = 0x7f
-             print("pb1=",pb1)
-             print("pb2=",pb2)
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
              mode0_write= True
@@ -1119,9 +1117,6 @@ def ysynthmain():
              elif pb1[midiCH] == 0x7f and pb2[midiCH] == 0x7f:
                 pb1[midiCH] = 0x00
                 pb2[midiCH] = 0x00
-             print("pb1=",pb1)
-             print("pb2=",pb2)
-             print(0x80*pb2[midiCH]+pb1[midiCH]-8192)
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
              mode0_write= True
