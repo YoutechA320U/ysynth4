@@ -53,6 +53,7 @@ else
   rm *.tar.bz2
 fi
 #ttymidiのビルド&インストール
+rm -rf /home/pi/ttymidi
 git clone https://github.com/YoutechA320U/ttymidi
 cd /home/pi/ttymidi
 gcc ttymidi.c -o ttymidi -lasound -pthread
