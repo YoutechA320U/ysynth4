@@ -73,9 +73,11 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
     
     git clone --recursive --depth 1 https://github.com/YoutechA320U/ysynth4.git
 
-3. `sudo sh /home/pi/ysynth4/setup.sh`でセットアップスクリプトを実行します。完了すると自動的に再起動します。
+3. `sudo sh /home/pi/ysynth4/setup.sh`でセットアップスクリプトを実行します。
 
-4. ディスプレイが表示されたら完了です。
+4. `sudo reboot`で再起動します。
+
+5. ディスプレイが表示されたら完了です。
 
 
 ## 使い方
