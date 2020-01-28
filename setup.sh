@@ -10,7 +10,6 @@ sudo apt-get update -y
 sudo apt-get upgrade -y
 sudo apt-get -y autoremove
 sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython3.7-dev libjack-jackd2-dev cython3 python3-setuptools i2c-tools python3-smbus python3-rpi.gpio python3-pip fluid-soundfont-gm python3-rpi.gpio python3-spidev python3-pip python3-numpy build-essential libjpeg-dev debhelper fonts-takao-gothic libopenjp2-7 libtiff5 timidity
-sudo apt-get remove -y timidity
 #RaspberryPiの機能をON
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0 
@@ -52,6 +51,7 @@ else
   rm /home/pi/ysynth4/TiMidity++-2.15.0/ -fr
   rm *.tar.bz2
 fi
+sudo apt-get remove -y timidity
 #ttymidiのビルド&インストール
 rm -rf /home/pi/ttymidi
 git clone https://github.com/YoutechA320U/ttymidi
