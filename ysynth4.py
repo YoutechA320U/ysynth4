@@ -28,6 +28,11 @@
 #v1.94 [2020/1/27]
 #RaspbianbusterLiteに対応しています。
 #セットアップ時に自前でTimidity++version2.15.0をビルドするようになりました。
+#Ysynth4アップデート時にsetup.shを再実行し、システムやライブラリのアップデートも行うようになりました。
+#それに伴いアップデート時のディスプレイの挙動も変更しました。
+
+#v1.95 [2020/1/27]
+#ピッチベンドの出力が正常でない不具合を修正しました。
 ##--##--##--##--##
 
 import RPi.GPIO as GPIO
@@ -68,7 +73,7 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.94
+version= 1.95
 day="2020/01/27"
 #*#*#*#*#*#*#*
 volume = 70
@@ -83,7 +88,7 @@ midiCC1=  [0]*16
 midiCC91=  [40]*16
 midiCC93=  [0]*16
 midiCC94=  [0]*16
-pb1 = [0]*16
+pb1 = [0x00]*16
 pb2 = [0x40]*16
 playflag = [0]
 sf2used = [0]
@@ -407,22 +412,22 @@ def waiting(): #待ち状態の処理
 
       if waitflag==4:
          draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-         draw.text((3,60),"  アップデートします",  font=fontss, fill=(0, 255, 0))
+         draw.text((3,60)," アップデートしています",  font=fontss, fill=(0, 255, 0))
          disp.display(img)
          time.sleep(0.5)
          if waitflag==4:
             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-            draw.text((3,60),"  アップデートします.",  font=fontss, fill=(0, 255, 0))
+            draw.text((3,60)," アップデートしています.",  font=fontss, fill=(0, 255, 0))
             disp.display(img)
             time.sleep(0.5)
          if waitflag==4:
             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-            draw.text((3,60),"  アップデートします..",  font=fontss, fill=(0, 255, 0))
+            draw.text((3,60)," アップデートしています..",  font=fontss, fill=(0, 255, 0))
             disp.display(img)
             time.sleep(0.5)
          if waitflag==4:
             draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-            draw.text((3,60),"  アップデートします...",  font=fontss, fill=(0, 255, 0))
+            draw.text((3,60)," アップデートしています...",  font=fontss, fill=(0, 255, 0))
             disp.display(img)        
             time.sleep(0.5)            
 
@@ -968,14 +973,16 @@ def ysynthmain():
              mode0_write= True
              
           if mode0_coordi ==9:
-             pb1[midiCH] -= 1
-             if pb1[midiCH] < 0:
+             if pb1[midiCH] > 0x00:
+                pb1[midiCH] -= 0x01
+             elif pb1[midiCH] == 0x00 and pb2[midiCH] > 0x00:
+                pb2[midiCH] -= 0x01
                 pb1[midiCH] = 0x7f
-                if pb2[midiCH] == 0:
-                   pb1[midiCH] = 0x7f
-                   pb2[midiCH] = 0x7f
-                else:
-                   pb2[midiCH] -= 1
+             elif pb1[midiCH] == 0x00 and pb2[midiCH] == 0x00:
+                pb1[midiCH] = 0x7f
+                pb2[midiCH] = 0x7f
+             print("pb1=",pb1)
+             print("pb2=",pb2)
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
              mode0_write= True
@@ -1104,12 +1111,17 @@ def ysynthmain():
              midiout.send_message([0xb0+midiCH, 94, midiCC94[midiCH]])
              mode0_write= True
           if mode0_coordi ==9:
-             pb1[midiCH] += 1
-             if pb1[midiCH] > 0x7f:
-                pb1[midiCH] = 0
-                pb2[midiCH] += 1
-                if pb2[midiCH] > 0x7f:
-                   pb2[midiCH] = 0
+             if pb1[midiCH] < 0x7f:
+                pb1[midiCH] += 0x01
+             elif pb1[midiCH] == 0x7f and pb2[midiCH] < 0x7f:
+                pb2[midiCH] += 0x01
+                pb1[midiCH] = 0x00
+             elif pb1[midiCH] == 0x7f and pb2[midiCH] == 0x7f:
+                pb1[midiCH] = 0x00
+                pb2[midiCH] = 0x00
+             print("pb1=",pb1)
+             print("pb2=",pb2)
+             print(0x80*pb2[midiCH]+pb1[midiCH]-8192)
              draw.rectangle((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1, 160, t_size_l_y+t_size_m_y*3), (0,0,0))
              draw.text((t_size_m_x*18, t_size_l_y+t_size_m_y*2+1),str("{0:04d}".format(0x80*pb2[midiCH]+pb1[midiCH]-8192)), font=fontm, fill=(255, 255, 55))
              mode0_write= True
