@@ -841,17 +841,20 @@ msg = None
 mode0_default_disp()
 disp.display(img)
 
-draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-waitflag=4
-subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
-subprocess.call("wget https://github.com/YoutechA320U/ysynth4/blob/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
-subprocess.call("sudo mv -f /home/pi/ysynth4/setup.sh.1 /home/pi/ysynth4/setup.sh" , shell=True)
-subprocess.call("sudo sh /home/pi/ysynth4/setup.sh" , shell=True)
-waitflag=0
-draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-draw.text((3,60),"    リロードします...",  font=fontss, fill=(0, 255, 0))
-disp.display(img)
-subprocess.call("sudo sed -i '844,854d' /home/pi/ysynth4/ysynth4.py" , shell=True)
+Timidity_Version = subprocess.check_output("timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$" , shell=True).decode('utf-8').replace('\n', '')
+if Timidity_Version != "2.15.0" :
+   draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+   waitflag=4
+   subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
+   subprocess.call("wget https://github.com/YoutechA320U/ysynth4/blob/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
+   subprocess.call("sudo mv -f /home/pi/ysynth4/setup.sh.1 /home/pi/ysynth4/setup.sh" , shell=True)
+   subprocess.call("sudo sh /home/pi/ysynth4/setup.sh" , shell=True)
+   waitflag=0
+   draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+   draw.text((3,60),"    リロードします...",  font=fontss, fill=(0, 255, 0))
+   disp.display(img)
+if Timidity_Version == "2.15.0" :
+   subprocess.call("sudo sed -i '844,857d' /home/pi/ysynth4/ysynth4.py" , shell=True)
 
 def ysynthmain():
  global longpush,volume,sf2,midi,mode0_coordi,mode1_coordi,mode2_coordi,mode3_coordi,mode0_coordi_xl,mode0_coordi_yl,\
