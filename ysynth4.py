@@ -835,12 +835,6 @@ def sc_key(): #スクリーンキーボード
       if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
          longpush=0
 
-##初期設定ここまで##
-time.sleep(1)
-msg = None
-mode0_default_disp()
-disp.display(img)
-
 Timidity_Version = subprocess.check_output("timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$" , shell=True).decode('utf-8').replace('\n', '')
 if Timidity_Version != "2.15.0" :
    draw.rectangle((0, 0, 160, 128), (0,0,0)) 
@@ -853,8 +847,16 @@ if Timidity_Version != "2.15.0" :
    draw.rectangle((0, 0, 160, 128), (0,0,0)) 
    draw.text((3,60),"    リロードします...",  font=fontss, fill=(0, 255, 0))
    disp.display(img)
+   Timidity_Version = subprocess.check_output("timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$" , shell=True).decode('utf-8').replace('\n', '')
 if Timidity_Version == "2.15.0" :
-   subprocess.call("sudo sed -i '844,857d' /home/pi/ysynth4/ysynth4.py" , shell=True)
+   subprocess.call("sudo sed -i '838,852d' /home/pi/ysynth4/ysynth4.py" , shell=True)
+
+##初期設定ここまで##
+time.sleep(1)
+msg = None
+mode0_default_disp()
+disp.display(img)
+
 
 def ysynthmain():
  global longpush,volume,sf2,midi,mode0_coordi,mode1_coordi,mode2_coordi,mode3_coordi,mode0_coordi_xl,mode0_coordi_yl,\
