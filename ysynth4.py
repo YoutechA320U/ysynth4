@@ -25,7 +25,7 @@
 #v1.92 [2019/09/16]
 #一部変数の抜けを修正しました。
 
-#v1.94 [2019/10/14]
+#v1.94 [2020/1/27]
 #RaspbianbusterLiteに対応しています。
 #セットアップ時に自前でTimidity++version2.15.0をビルドするようになりました。
 ##--##--##--##--##
@@ -68,8 +68,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.92
-day="2019/09/16"
+version= 1.94
+day="2020/01/27"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -404,6 +404,27 @@ def waiting(): #待ち状態の処理
             draw.text((9, t_size_l_y+t_size_m_y*2+1),"お待ちください...", font=fontm, fill=(255, 255, 55))
             disp.display(img)        
             time.sleep(0.5)
+
+      if waitflag==4:
+         draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+         draw.text((3,60),"  アップデートします",  font=fontss, fill=(0, 255, 0))
+         disp.display(img)
+         time.sleep(0.5)
+         if waitflag==4:
+            draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+            draw.text((3,60),"  アップデートします.",  font=fontss, fill=(0, 255, 0))
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==4:
+            draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+            draw.text((3,60),"  アップデートします..",  font=fontss, fill=(0, 255, 0))
+            disp.display(img)
+            time.sleep(0.5)
+         if waitflag==4:
+            draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+            draw.text((3,60),"  アップデートします...",  font=fontss, fill=(0, 255, 0))
+            disp.display(img)        
+            time.sleep(0.5)            
 
 thread1 = threading.Thread(target=waiting)
 thread1.start()
@@ -819,6 +840,18 @@ time.sleep(1)
 msg = None
 mode0_default_disp()
 disp.display(img)
+
+draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+waitflag=4
+subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
+subprocess.call("wget https://github.com/YoutechA320U/ysynth4/blob/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
+subprocess.call("sudo mv -f /home/pi/ysynth4/setup.sh.1 /home/pi/ysynth4/setup.sh" , shell=True)
+subprocess.call("sudo sh /home/pi/ysynth4/setup.sh" , shell=True)
+waitflag=0
+draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+draw.text((3,60),"    リロードします...",  font=fontss, fill=(0, 255, 0))
+disp.display(img)
+subprocess.call("sudo sed -i '844,854d' /home/pi/ysynth4/ysynth4.py" , shell=True)
 
 def ysynthmain():
  global longpush,volume,sf2,midi,mode0_coordi,mode1_coordi,mode2_coordi,mode3_coordi,mode0_coordi_xl,mode0_coordi_yl,\
@@ -1410,12 +1443,15 @@ def ysynthmain():
              download_v=float(subprocess.check_output("grep -m1 version= /home/pi/ysynth4/ysynth4.py.1|awk '{print $2;}'" , shell=True).decode('utf-8').strip().replace('\nysynth4/ysynth4.py.1|grep', ''))
              if download_v > version:
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-                draw.text((3,60),"  アップデートします...",  font=fontss, fill=(0, 255, 0))
+                waitflag=4
                 subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
                 subprocess.call("sudo mv -f /home/pi/ysynth4/ysynth4.py.1 /home/pi/ysynth4/ysynth4.py" , shell=True)
-                disp.display(img)
-                time.sleep(2)
+                subprocess.call("wget https://github.com/YoutechA320U/ysynth4/blob/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
+                subprocess.call("sudo mv -f /home/pi/ysynth4/setup.sh.1 /home/pi/ysynth4/setup.sh" , shell=True)
+                subprocess.call("sudo sh /home/pi/ysynth4/setup.sh" , shell=True)
+                waitflag=0
                 draw.rectangle((0, 0, 160, 128), (0,0,0)) 
+                draw.text((3,60),"    リロードします...",  font=fontss, fill=(0, 255, 0))
                 disp.display(img)
                 subprocess.call('sudo systemctl restart ysynth4.service', shell=True)
              if download_v <= version:
