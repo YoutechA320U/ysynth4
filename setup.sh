@@ -53,11 +53,12 @@ else
 fi
 sudo apt-get remove -y timidity
 #ttymidiのビルド&インストール
-rm -rf /home/pi/ttymidi
+sudo rm -rf /home/pi/ttymidi
 git clone https://github.com/YoutechA320U/ttymidi
 cd /home/pi/ttymidi
 gcc ttymidi.c -o ttymidi -lasound -pthread
 mv ttymidi /home/pi/ysynth4
+cd /home/pi/
 #Timidity設定ファイルの生成
 sudo mkdir /usr/local/share/timidity/
 sudo sh -c "echo 'opt iA\nopt Os\nopt --sequencer-ports=1\nopt --realtime-priority=90\nopt B3,8\nopt q0-0\nopt s32kHz\nopt -EFresamp=1\nopt -EFreverb=1\nopt -EFchorus=1\nopt p128a' > /usr/local/share/timidity/timidity.cfg"

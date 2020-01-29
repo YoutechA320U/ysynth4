@@ -31,7 +31,7 @@
 #Ysynth4アップデート時にsetup.shを再実行し、システムやライブラリのアップデートも行うようになりました。
 #それに伴いアップデート時のディスプレイの挙動も変更しました。
 
-#v1.96 [2020/1/29]
+#v1.95 [2020/1/28]
 #ピッチベンドの出力が正常でない不具合を修正しました。
 ##--##--##--##--##
 
@@ -73,8 +73,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.96
-day="2020/01/29"
+version= 1.95
+day="2020/01/28"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -235,7 +235,7 @@ msg = None
 def mididisp(): #MIDI入力をディスプレイに反映する処理
    global midiPROG,midiCC7,midiCC11,midiCC10,midiCC10,midiCC1,midiCC91,midiCC93,midiCC94,pb1,pb2,mode0_write
    while True:
-    time.sleep(0.00001)
+    time.sleep(0.0001)
     msg = midiin.get_message()
     if msg is None:
        message, deltatime = None,None 
@@ -347,7 +347,7 @@ def mididisp(): #MIDI入力をディスプレイに反映する処理
 def waiting(): #待ち状態の処理
    global waitflag
    while True:
-      time.sleep(0.000000001)
+      time.sleep(0.0001)
       if waitflag==1:
          draw.rectangle((t_size_m_x*6, t_size_l_y+t_size_m_y+1,160, t_size_l_y+t_size_m_y+14),outline=(0,0,0), fill=(0,0,0))
          draw.text((t_size_m_x*6, t_size_l_y+t_size_m_y+1),"お待ちください",  font=fontm, fill=(255, 255, 55))
@@ -539,7 +539,7 @@ def dialog_loop0(txt, cmd): #ダイアログの選択待ち
     while (GPIO.input(input_OK)) == 0: 
           continue 
     while True:
-       time.sleep(0.00001)   
+       time.sleep(0.0001)   
        if GPIO.input(input_RIGHT) == 0 :
           time.sleep(0.01)
           draw.rectangle((dialog_coordi_xl[dialog_coordi], dialog_coordi_yl[dialog_coordi],dialog_coordi_xl[dialog_coordi]+cur_size_x, dialog_coordi_yl[dialog_coordi]+cur_size_y),(217,207,201))
@@ -879,7 +879,7 @@ def ysynthmain():
     except:
      pass
     if GPIO.input(input_LEFT) == 0 and GPIO.input(input_MODE) != 0: 
-       time.sleep(0.00001)
+       time.sleep(0.0001)
        if mode==0:
           if mode0_coordi ==0:
              midiCH -=1
@@ -1022,7 +1022,7 @@ def ysynthmain():
        longpush_(input_LEFT)
 
     if GPIO.input(input_RIGHT) == 0 and GPIO.input(input_MODE) != 0: 
-       time.sleep(0.00001)
+       time.sleep(0.0001)
        if mode==0:
           if mode0_coordi ==0:
              midiCH +=1
@@ -1513,7 +1513,7 @@ def ysynthmain():
 def mode0_write_():
    global mode0_write
    while True:
-      time.sleep(0.000000001)
+      time.sleep(0.0001)
       if mode0_write is True and mode==0:
          mode0_write= False
          disp.display(img)
