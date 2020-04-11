@@ -19,11 +19,15 @@ sudo sed -i -e '$ a dtparam=i2s=on' /boot/config.txt
 sudo sed -i -e '/#dtparam=i2s=on/d' /boot/config.txt
 sudo sed -i -e '/core_freq=250/d' /boot/config.txt
 sudo sed -i -e '$ a core_freq=250' /boot/config.txt
+sudo sed -i -e '/dtoverlay=dwc2/d' /boot/config.txt
 sudo sed -i -e '/dtoverlay=pi3-miniuart-bt/d' /boot/config.txt
 sudo sed -i -e '/dtoverlay=midi-uart0/d' /boot/config.txt
+sudo sed -i -e '$ a dtoverlay=dwc2' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=pi3-miniuart-bt' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=midi-uart0' /boot/config.txt
 sudo sed -i -e 's/console=serial0,115200//' /boot/cmdline.txt
+sudo sed -i -e 's/modules-load=dwc2,g_midi//' /boot/cmdline.txt
+sudo sed -i -e 's/$/modules-load=dwc2,g_midi/' /boot/cmdline.txt
 #cfgforsとTimidityのビルド&インストール
 if [ `timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$` = "2.15.0" ]; then
   echo "Timidity++は最新のバージョンです"
@@ -65,6 +69,8 @@ sudo sh -c "echo 'opt iA\nopt Os\nopt --sequencer-ports=1\nopt --realtime-priori
 #ysynth4のサービス生成&有効化
 sudo sh -c "echo '[Unit]\nDescription = ysynth4\n[Service]\nExecStart = /usr/bin/python3.7 /home/pi/ysynth4/ysynth4.py\nRestart = always\nType = simple\n[Install]\nWantedBy = multi-user.target' > /etc/systemd/system/ysynth4.service"
 sudo systemctl enable ysynth4.service
+#midiconnect更新
+sudo sh -c "echo 'aconnect 128:0 131:0\naconnect 128:0 130:0\naconnect 129:0 128:1\naconnect 129:0 131:0\naconnect 129:0 16:0\naconnect 129:0 20:0\naconnect 129:0 24:0\naconnect 129:0 28:0\naconnect 16:0 130:0\naconnect 16:0 131:0\naconnect 20:0 130:0\naconnect 20:0 131:0\naconnect 24:0 130:0\naconnect 24:0 131:0\naconnect 28:0 130:0\naconnect 28:0 131:0\naconnect 14:0 128:1\naconnect 14:0 130:0\naconnect 14:0 131:0\naconnect 14:0 16:0\naconnect 14:0 20:0\naconnect 14:0 24:0\naconnect 14:0 28:0' > /home/pi/ysynth4/midiconnect.sh"
 #USB-MIDI機器を自動接続するルールを追加
 sudo cp /home/pi/ysynth4/90-usbmidiconnect.rules /etc/udev/rules.d/
 #pip3で必要なライブラリをインストール
