@@ -71,6 +71,8 @@ sudo sh -c "echo '[Unit]\nDescription = ysynth4\n[Service]\nExecStart = /usr/bin
 sudo systemctl enable ysynth4.service
 #midiconnect更新
 sudo sh -c "echo 'aconnect 128:0 131:0\naconnect 128:0 130:0\naconnect 129:0 128:1\naconnect 129:0 131:0\naconnect 129:0 16:0\naconnect 129:0 20:0\naconnect 129:0 24:0\naconnect 129:0 28:0\naconnect 16:0 130:0\naconnect 16:0 131:0\naconnect 20:0 130:0\naconnect 20:0 131:0\naconnect 24:0 130:0\naconnect 24:0 131:0\naconnect 28:0 130:0\naconnect 28:0 131:0\naconnect 14:0 128:1\naconnect 14:0 130:0\naconnect 14:0 131:0\naconnect 14:0 16:0\naconnect 14:0 20:0\naconnect 14:0 24:0\naconnect 14:0 28:0' > /home/pi/ysynth4/midiconnect.sh"
+#デフォルトのサウンドカードを2に
+sudo sh -c "echo 'defaults.pcm.card 1\ndefaults.ctl.card 1' >  /etc/asound.conf"
 #USB-MIDI機器を自動接続するルールを追加
 sudo cp /home/pi/ysynth4/90-usbmidiconnect.rules /etc/udev/rules.d/
 #pip3で必要なライブラリをインストール
