@@ -33,6 +33,9 @@
 
 #v1.95 [2020/1/28]
 #ピッチベンドの出力が正常でない不具合を修正しました。
+
+#v1.96 [2020/4/11]
+#RaspberryPi4のOTG_USB-MIDIに対応しました。
 ##--##--##--##--##
 
 import RPi.GPIO as GPIO
@@ -73,8 +76,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.95
-day="2020/01/28"
+version= 1.96
+day="2020/04/11"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -193,7 +196,7 @@ wifi_connect=subprocess.check_output('''wpa_cli -i wlan0 status|grep -v bssid |g
 if wifi_connect=="":
    wifi_connect="接続できません" 
 #wifi_connect="**********"
-audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 0'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', '').replace(',', ''))
+audio_card = str(subprocess.check_output("aplay -l |grep -m1 'card 1'|awk '{print $4;}' " ,shell=True).decode('utf-8').strip().replace(']', '').replace('[', '').replace(',', ''))
 mountcheck=subprocess.check_output("mount|grep -m1 /dev/sda|awk '{print $3}'" ,shell=True).decode('utf-8').strip()
 subprocess.call('sh /home/pi/ysynth4/midiconnect.sh', shell=True)
 
@@ -839,22 +842,6 @@ def sc_key(): #スクリーンキーボード
          disp.display(img)
       if (GPIO.input(input_LEFT) and GPIO.input(input_RIGHT) and GPIO.input(input_UP) and GPIO.input(input_DOWN) and GPIO.input(input_OK))== 1:  
          longpush=0
-
-Timidity_Version = subprocess.check_output("timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$" , shell=True).decode('utf-8').replace('\n', '')
-if Timidity_Version != "2.15.0" :
-   draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-   waitflag=4
-   subprocess.call('sudo chown -R pi:pi /home/pi/' ,shell=True)
-   subprocess.call("wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/setup.sh -P /home/pi/ysynth4/" , shell=True)
-   subprocess.call("sudo mv -f /home/pi/ysynth4/setup.sh.1 /home/pi/ysynth4/setup.sh" , shell=True)
-   subprocess.call("sudo sh /home/pi/ysynth4/setup.sh" , shell=True)
-   waitflag=0
-   draw.rectangle((0, 0, 160, 128), (0,0,0)) 
-   draw.text((3,60),"    リロードします...",  font=fontss, fill=(0, 255, 0))
-   disp.display(img)
-   Timidity_Version = subprocess.check_output("timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$" , shell=True).decode('utf-8').replace('\n', '')
-if Timidity_Version == "2.15.0" :
-   subprocess.call("sudo sed -i '843,857d' /home/pi/ysynth4/ysynth4.py" , shell=True)
 
 ##初期設定ここまで##
 time.sleep(1)
