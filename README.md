@@ -15,7 +15,7 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
     *GM/GS/XG/エクスクルーシブメッセージ対応*
     *Timidity++ version 2.15.0*
     
-    システム:RaspberryPi 3B+, Raspbian buster Lite
+    システム:RaspberryPi 3B+ or RaspberryPi4B, Raspbian buster Lite
     パート数:16
     最大同時発音数:128
     音源:サウンドフォント(.sf2) ※任意の数のファイルを追加可能
@@ -29,7 +29,7 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 
 ## 開発環境
     OS : Raspbian buster Lite
-    RaspberryPi : RaspberryPi 3B+
+    RaspberryPi : RaspberryPi 3B+/4B
     Python : ver3.7
     
 ## 回路図
@@ -43,8 +43,8 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 
 |部品名|型番など|数量|
 |:---|:--:|---:|
-|RaspberryPi|RaspberryPi 3B/3B+|1|
-|Beetle - The Smallest Arduino Board|[DFR0282](https://www.switch-science.com/catalog/4284/)|1|
+|RaspberryPi|RaspberryPi 3B/3B+/4B|1|
+|(※RaspberryPi4以外でUSB-MIDIを使いたい場合)Beetle - The Smallest Arduino Board|[DFR0282](https://www.switch-science.com/catalog/4284/)|1|
 |micoSDカード|クラス10またはUHF-1以上かつ8GB以上|1|
 |USBメモリ|FAT32でフォーマットが可能1GB以上|1|
 |I2S接続オーディオDAC（オプション）|Pi-DAC+相当のDAC(Pi-DAC Zeroなど)|※オプション(1)|
@@ -61,7 +61,7 @@ RaspberryPi 3B+で動作するハードウェアシンセサイザーです。�
 ## インストール方法
 ※OSはRaspbian buster Lite前提です。
 
-1. Beetle - The Smallest Arduino Boardには[こちらのUSB-MIDI変換プログラム](https://github.com/gdsports/MIDIUARTUSB)を書き込んでください。
+1. (使う場合)Beetle - The Smallest Arduino Boardには[こちらのUSB-MIDI変換プログラム](https://github.com/gdsports/MIDIUARTUSB)を書き込んでください。
 
 2. RaspberryPiをネットワークに接続して以下のコマンドを実行します。
 
@@ -168,6 +168,9 @@ Ysynth4の本体スクリプトysynth4.pyを最新版にアップデートしま
 
 有線LANかWiFiでインターネットに接続してある必要があります。ダイアログボックスが出現し、左右キーで選択し、OKキーで決定します。
 
+※Ver1.94よりも前のバージョンの方はお手数ですが完了後`sudo sh /home/pi/ysynth4/setup.sh`を実行してください。一部の反映には再起動が必要な場合があります。
+
+
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp15.JPG "UPDATE")
 ![SS](https://github.com/YoutechA320U/ysynth4/blob/master/SS/disp16.JPG "UPDATE")
 
@@ -208,3 +211,4 @@ Ysynth4の本体スクリプトのみ再起動します。ダイアログボッ�
     [2019/09/14] - 描画のマルチスレッド化調整及びディスプレイフリーズ対策追加(Ver.1.91)
     [2020/01/27] - セットアップ時に自前でTimidity++version2.15.0をビルドするように(Ver1.94)
     [2020/01/28] - ピッチベンドの出力が正常でない不具合を修正(Ver1.95)
+    [2020/04/11] - RaspberryPi4のOTG_USB-MIDIに対応しました(Ver1.96)
