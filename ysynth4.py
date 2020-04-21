@@ -36,6 +36,8 @@
 
 #v1.96 [2020/4/11]
 #RaspberryPi4のOTG_USB-MIDIに対応しました。
+#v1.97 [2020/4/21]
+#サウンドカード切り替えの処理が間違っていたので修正
 ##--##--##--##--##
 
 import RPi.GPIO as GPIO
@@ -76,8 +78,8 @@ draw = ImageDraw.Draw(img)
 draw.rectangle((0, 0, 160, 160), (0,0,0))
 
 #*#*#*#*#*#*#
-version= 1.96
-day="2020/04/11"
+version= 1.97
+day="2020/04/21"
 #*#*#*#*#*#*#*
 volume = 70
 mode = 0
@@ -1347,8 +1349,8 @@ def ysynthmain():
              if dialog_coordi==0:
                 subprocess.call("sudo sed -i -e '$ a dtparam=audio=on' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtoverlay=iqaudio-dacplus/d' /boot/config.txt" ,shell=True)
-                subprocess.call("sudo sed -i -e '$ a opt B3,8' /etc/timidity/timidity.cfg" ,shell=True)
-                subprocess.call("sudo sed -i -e '/opt B2,8/d' /etc/timidity/timidity.cfg" ,shell=True)
+                subprocess.call("sudo sed -i -e '$ a opt B3,8' /usr/local/share/timidity/timidity.cfg" ,shell=True)
+                subprocess.call("sudo sed -i -e '/opt B2,8/d' /usr/local/share/timidity/timidity.cfg" ,shell=True)
                 subprocess.call("sudo reboot" ,shell=True)
                 
           if audio_card == str("bcm2835"):          
@@ -1360,8 +1362,8 @@ def ysynthmain():
              if dialog_coordi==0:
                 subprocess.call("sudo sed -i -e '$ a dtoverlay=iqaudio-dacplus' /boot/config.txt" ,shell=True)
                 subprocess.call("sudo sed -i -e '/dtparam=audio=on/d' /boot/config.txt" ,shell=True)
-                subprocess.call("sudo sed -i -e '$ a opt B2,8' /etc/timidity/timidity.cfg" ,shell=True)
-                subprocess.call("sudo sed -i -e '/opt B3,8/d' /etc/timidity/timidity.cfg" ,shell=True)
+                subprocess.call("sudo sed -i -e '$ a opt B2,8' /usr/local/share/timidity/timidity.cfg" ,shell=True)
+                subprocess.call("sudo sed -i -e '/opt B3,8/d' /usr/local/share/timidity/timidity.cfg" ,shell=True)
                 subprocess.call("sudo reboot" ,shell=True)
 
        if mode==2 and mode2_coordi ==2:
