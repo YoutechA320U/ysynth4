@@ -9,7 +9,7 @@
 sudo apt-get update -y
 sudo apt-get upgrade -y
 sudo apt-get -y autoremove
-sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython3.7-dev libjack-jackd2-dev cython3 python3-setuptools i2c-tools python3-smbus python3-rpi.gpio python3-pip fluid-soundfont-gm python3-rpi.gpio python3-spidev python3-pip python3-numpy build-essential libjpeg-dev debhelper fonts-takao-gothic libopenjp2-7 libtiff5 timidity
+sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython3.7-dev libjack-jackd2-dev cython3 python3-setuptools i2c-tools python3-smbus python3-rpi.gpio python3-pip fluid-soundfont-gm python3-rpi.gpio python3-spidev python3-pip python3-numpy build-essential libjpeg-dev debhelper fonts-takao-gothic libopenjp2-7 libtiff5
 #RaspberryPiの機能をON
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0 
@@ -35,6 +35,7 @@ else
   echo "Timidity++をバージョンアップします"
   cd /home/pi/ysynth4/
   rm *.patch
+  rm *.tar.bz2
   wget https://raw.githubusercontent.com/YoutechA320U/ysynth4/master/timidity%2B%2B-2.15.0-cfgforsf-src.patch
   sudo apt-get remove -y timidity
   wget https://excellmedia.dl.sourceforge.net/project/timidity/TiMidity%2B%2B/TiMidity%2B%2B-2.15.0/TiMidity%2B%2B-2.15.0.tar.bz2
@@ -55,8 +56,6 @@ else
   rm /home/pi/ysynth4/TiMidity++-2.15.0/ -fr
   rm *.tar.bz2
 fi
-sudo apt-get remove -y timidity
-sudo apt-get -y autoremove
 #ttymidiのビルド&インストール
 if [ `/home/pi/ysynth4/ttymidi -V |grep -m1 ttymidi|awk '{print $2}'| grep -v ^$` = "0.60" ]; then
   echo "ttymidiは最新のバージョンです"
