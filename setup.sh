@@ -85,5 +85,11 @@ sudo pip3 install pillow
 sudo pip3 install st7735
 sudo pip3 install python-rtmidi
 sudo sed -i -e 's/ST7735_INVOFF = 0x20/ST7735_INVOFF = 0x21/g' -e 's/ST7735_INVON = 0x21/ST7735_INVON = 0x20/g' -e 's/self.data(0xC8)/self.data(0xC0)/g' /usr/local/lib/python3.7/dist-packages/ST7735/__init__.py
+#usbmountをインストール
+git clone https://github.com/rbrito/usbmount.git
+cd /home/pi/usbmount
+sudo dpkg-buildpackage -us -uc -b
+cd ..
+sudo apt install -y ./usbmount_0.0.24_all.deb
 #再起動
 #sudo reboot
