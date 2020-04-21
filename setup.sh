@@ -13,7 +13,7 @@ sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython
 #RaspberryPiの機能をON
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0 
-sudo raspi-config nonint do_uart 0
+sudo raspi-config nonint do_serial 2
 sudo sed -i -e '/dtparam=i2s=on/d' /boot/config.txt
 sudo sed -i -e '$ a dtparam=i2s=on' /boot/config.txt
 sudo sed -i -e '/#dtparam=i2s=on/d' /boot/config.txt
@@ -56,13 +56,19 @@ else
   rm *.tar.bz2
 fi
 sudo apt-get remove -y timidity
+sudo apt-get -y autoremove
 #ttymidiのビルド&インストール
-sudo rm -rf /home/pi/ttymidi
-git clone https://github.com/YoutechA320U/ttymidi
-cd /home/pi/ttymidi
-gcc ttymidi.c -o ttymidi -lasound -pthread
-mv ttymidi /home/pi/ysynth4
-cd /home/pi/
+if [ `/home/pi/ysynth4/ttymidi -V |grep -m1 ttymidi|awk '{print $2}'| grep -v ^$` = "0.60" ]; then
+  echo "ttymidiは最新のバージョンです"
+else
+  echo "ttymidiをバージョンアップします" 
+  sudo rm -rf /home/pi/ttymidi
+  git clone https://github.com/YoutechA320U/ttymidi
+  cd /home/pi/ttymidi
+  gcc ttymidi.c -o ttymidi -lasound -pthread
+  mv ttymidi /home/pi/ysynth4
+  cd /home/pi/
+fi
 #Timidity設定ファイルの生成
 sudo mkdir /usr/local/share/timidity/
 sudo sh -c "echo 'opt iA\nopt Os\nopt --sequencer-ports=1\nopt --realtime-priority=90\nopt B3,8\nopt q0-0\nopt s32kHz\nopt -EFresamp=1\nopt -EFreverb=1\nopt -EFchorus=1\nopt p128a' > /usr/local/share/timidity/timidity.cfg"
