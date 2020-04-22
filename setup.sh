@@ -13,7 +13,7 @@ sudo apt-get install -y libasound2-dev git build-essential python3-dev libpython
 #RaspberryPiの機能をON
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0 
-sudo raspi-config nonint do_serial 2
+#sudo sudo raspi-config nonint do_serial 2
 sudo sed -i -e '/dtparam=i2s=on/d' /boot/config.txt
 sudo sed -i -e '$ a dtparam=i2s=on' /boot/config.txt
 sudo sed -i -e '/#dtparam=i2s=on/d' /boot/config.txt
@@ -25,7 +25,7 @@ sudo sed -i -e '/dtoverlay=midi-uart0/d' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=dwc2' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=pi3-miniuart-bt' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=midi-uart0' /boot/config.txt
-sudo sed -i -e 's/console=serial0,115200//' /boot/cmdline.txt
+sudo sed -i -e 's/console=serial0,115200 //' /boot/cmdline.txt
 sudo sed -i -e 's/modules-load=dwc2,g_midi//' /boot/cmdline.txt
 sudo sed -i -e 's/$/modules-load=dwc2,g_midi/' /boot/cmdline.txt
 #cfgforsとTimidityのビルド&インストール
@@ -56,6 +56,7 @@ else
   rm /home/pi/ysynth4/TiMidity++-2.15.0/ -fr
   rm *.tar.bz2
 fi
+cd /home/pi/
 #ttymidiのビルド&インストール
 if [ `/home/pi/ysynth4/ttymidi -V |grep -m1 ttymidi|awk '{print $2}'| grep -v ^$` = "0.60" ]; then
   echo "ttymidiは最新のバージョンです"
@@ -92,5 +93,9 @@ cd /home/pi/usbmount
 sudo dpkg-buildpackage -us -uc -b
 cd ..
 sudo apt install -y ./usbmount_0.0.24_all.deb
+sudo sed -i -e '/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,codepage=932,uid=pi,gid=pi,dmask=000,fmask=011"/d' /etc/usbmount/usbmount.conf
+sudo sed -i -e '$ a allow-hotplug wlan0\n /etc/network/interfacesiface wlan0 inet manual\n    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf' /etc/network/interfaces
+sudo sed -i -e '$ a FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,codepage=932,uid=pi,gid=pi,dmask=000,fmask=011"' /etc/usbmount/usbmount.conf
+
 #再起動
 #sudo reboot
