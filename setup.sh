@@ -26,8 +26,8 @@ sudo sed -i -e '$ a dtoverlay=dwc2' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=pi3-miniuart-bt' /boot/config.txt
 sudo sed -i -e '$ a dtoverlay=midi-uart0' /boot/config.txt
 sudo sed -i -e 's/console=serial0,115200 //' /boot/cmdline.txt
-sudo sed -i -e 's/modules-load=dwc2,g_midi//' /boot/cmdline.txt
-sudo sed -i -e 's/$/modules-load=dwc2,g_midi/' /boot/cmdline.txt
+sudo sed -i -e 's/ modules-load=dwc2,g_midi//' /boot/cmdline.txt
+sudo sed -i -e 's/$/ modules-load=dwc2,g_midi/' /boot/cmdline.txt
 #cfgforsとTimidityのビルド&インストール
 if [ `timidity -v |grep -m1 version |awk '{print $3}'| grep -v ^$` = "2.15.0" ]; then
   echo "Timidity++は最新のバージョンです"
